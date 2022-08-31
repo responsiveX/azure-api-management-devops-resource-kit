@@ -1,7 +1,8 @@
 {
   "profiles": {
     "apimtemplate": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "extract --extractorConfig extractorSettings.json"
     },
     "Docker": {
       "commandName": "Docker"

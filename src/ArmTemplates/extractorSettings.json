@@ -1,0 +1,16 @@
+{
+  "sourceApimName": "apim-carquotes-dev",
+  "destinationApimName": "apim-carquotes-dev",
+  "resourceGroup": "rg-carquotes-dev",
+  "fileFolder": "D:/Dev/CarQuotes/lead-service/deploy/api-management",
+  "apiName": "Lead",
+  "includeAllRevisions": true,
+  "splitAPIs": false,
+  "paramServiceUrl": true,
+  "paramLogResourceId": true,
+  "ParamNamedValuesKeyVaultSecrets": true,
+  "excludeBuildInGroups": true,
+  "policyXMLBaseUrl": "https://stcarquotesdeploy.blob.core.windows.net/test/policies/",
+  "linkedTemplatesBaseUrl": "https://stcarquotesdeploy.blob.core.windows.net/test/",
+  "baseFileName": "carquotes"
+}
