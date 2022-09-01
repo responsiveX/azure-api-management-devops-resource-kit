@@ -238,6 +238,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             }
             else
             {
+                //TODO: Determine if there are legitimate use cases that hit the else block. If so, it should be altered to utilize DirectoryNameGenerator.
                 this.logger.LogInformation("No specific parameters are set for template generation...");
                 await this.GenerateTemplates(this.extractorParameters.FilesGenerationRootDirectory, singleApiName: this.extractorParameters.SingleApiName);
             }
@@ -1085,10 +1086,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
 
             foreach (string apiName in this.extractorParameters.MultipleApiNames)
             {
-                // generate seperate folder for each API
-                string apiFileFolder = string.Concat(this.extractorParameters.FilesGenerationRootDirectory, $@"/{apiName}");
-                Directory.CreateDirectory(apiFileFolder);
-                await this.GenerateTemplates(apiFileFolder, singleApiName: apiName);
+                // generate seperate folder with templates for each API
+                await this.GenerateSingleAPIWithoutRevisionsTemplates(apiName);
             }
 
             // create master templates for these apis 
@@ -1099,15 +1098,17 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             this.logger.LogInformation($@"Finished extracting mutiple APIs");
         }
 
-        async Task GenerateSingleAPIWithoutRevisionsTemplates()
+        async Task GenerateSingleAPIWithoutRevisionsTemplates(string singleApiName = null)
         {
-            this.logger.LogInformation("Extracting singleAPI {0} without revisions", this.extractorParameters.SingleApiName);
+            singleApiName = singleApiName ?? this.extractorParameters.SingleApiName;
+
+            this.logger.LogInformation("Extracting singleAPI {0} without revisions", singleApiName);
 
             var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
 
             ApiRevisionTemplateResource currentRevision = null;
 
-            await foreach (var apiRevision in this.apiRevisionExtractor.GetApiRevisionsAsync(this.extractorParameters.SingleApiName, this.extractorParameters))
+            await foreach (var apiRevision in this.apiRevisionExtractor.GetApiRevisionsAsync(singleApiName, this.extractorParameters))
             {
                 if (apiRevision.IsCurrent)
                 {
@@ -1121,7 +1122,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 var apiRevisionName = currentRevision.ApiId.Split("/")[2];
 
                 // creating a folder for this api revision
-                var revFileFolder = directoryNameGenerator.GetApiVersionAndRevisionFolder(this.extractorParameters.SingleApiName, apiRevisionName);
+                var revFileFolder = directoryNameGenerator.GetApiVersionAndRevisionFolder(singleApiName, apiRevisionName);
                 Directory.CreateDirectory(revFileFolder);
 
                 await this.GenerateTemplates(revFileFolder, singleApiName: apiRevisionName);
@@ -1130,7 +1131,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             }
             else
             {
-                throw new ApiRevisionNotFoundException($"Revision {this.extractorParameters.SingleApiName} doesn't exist, something went wrong!");
+                throw new ApiRevisionNotFoundException($"Revision {singleApiName} doesn't exist, something went wrong!");
             }
         }
 
