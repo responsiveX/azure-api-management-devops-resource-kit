@@ -4,7 +4,7 @@
   "resourceGroup": "rg-carquotes-dev",
   "fileFolder": "D:/Dev/CarQuotes/lead-service/deploy/api-management",
   "apiName": "Lead",
-  "includeAllRevisions": true,
+  "includeAllRevisions": false,
   "splitAPIs": false,
   "paramServiceUrl": true,
   "paramLogResourceId": true,

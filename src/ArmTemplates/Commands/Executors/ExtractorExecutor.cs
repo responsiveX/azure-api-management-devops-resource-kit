@@ -12,6 +12,7 @@ using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.FileHandlers;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Abstractions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.ApiManagementService;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.ApiReleases;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.ApiRevisions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Apis;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.ApiVersionSet;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.AuthorizationServer;
@@ -45,6 +46,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
     public class ExtractorExecutor
     {
         ExtractorParameters extractorParameters;
+
 
         readonly ILogger<ExtractorExecutor> logger;
         readonly IApisClient apisClient;
@@ -228,6 +230,11 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             {
                 this.logger.LogInformation("Launching single API with revisions templates extraction...");
                 await this.GenerateSingleAPIWithRevisionsTemplates();
+            }
+            else if (!string.IsNullOrEmpty(this.extractorParameters.SingleApiName) && !this.extractorParameters.IncludeAllRevisions)
+            {
+                this.logger.LogInformation("Launching single API without revisions templates extraction...");
+                await this.GenerateSingleAPIWithoutRevisionsTemplates();
             }
             else
             {
@@ -988,6 +995,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
         /// <returns></returns>
         async Task GenerateSplitAPITemplates()
         {
+            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
+
             // Generate folders based on all apiversionset
             var apiDictionary = await this.GetAllAPIsDictionary(this.extractorParameters);
 
@@ -999,15 +1008,11 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 // get API root folder
                 string apiRootFolder = versionSetEntry.Key;
 
-                // create API root folder
-                apiFileFolder = string.Concat(@apiFileFolder, $@"/{apiRootFolder}");
-                Directory.CreateDirectory(apiFileFolder);
-
                 // if it's APIVersionSet, generate the versionsetfolder for templates
                 if (versionSetEntry.Value.Count > 1)
                 {
                     // create master templates for each apiVersionSet
-                    string versionSetFolder = string.Concat(@apiFileFolder, this.extractorParameters.FileNames.VersionSetMasterFolder);
+                    string versionSetFolder = directoryNameGenerator.GetApiVersionSetMasterFolder(apiRootFolder);
                     Directory.CreateDirectory(versionSetFolder);
                     await this.GenerateTemplates(versionSetFolder, multipleApiNames: versionSetEntry.Value);
 
@@ -1018,7 +1023,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 foreach (string apiName in versionSetEntry.Value)
                 {
                     // create folder for each API
-                    string tempFileFolder = string.Concat(@apiFileFolder, $@"/{apiName}");
+                    string tempFileFolder = directoryNameGenerator.GetApiVersionAndRevisionFolder(apiRootFolder, apiName);
                     Directory.CreateDirectory(tempFileFolder);
                     // generate templates for each API
                     await this.GenerateTemplates(tempFileFolder, singleApiName: apiName);
@@ -1033,6 +1038,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
         /// </summary>
         async Task GenerateAPIVersionSetTemplates()
         {
+            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
+
             // get api dictionary and check api version set
             var apiDictionary = await this.GetAllAPIsDictionary(this.extractorParameters);
             if (!apiDictionary.ContainsKey(this.extractorParameters.ApiVersionSetName))
@@ -1049,13 +1056,14 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 foreach (string apiName in apiDictionary[this.extractorParameters.ApiVersionSetName])
                 {
                     // generate seperate folder for each API
-                    string apiFileFolder = string.Concat(this.extractorParameters.FilesGenerationRootDirectory, $@"/{apiRootFolder}", $@"/{apiName}");
+                    string apiFileFolder = directoryNameGenerator.GetApiVersionAndRevisionFolder(apiRootFolder, apiName);
+                    
                     Directory.CreateDirectory(apiFileFolder);
                     await this.GenerateTemplates(apiFileFolder, singleApiName: apiName);
                 }
 
                 // create master templates for this apiVersionSet 
-                string versionSetFolder = string.Concat(this.extractorParameters.FilesGenerationRootDirectory, $@"/{apiRootFolder}", this.extractorParameters.FileNames.VersionSetMasterFolder);
+                string versionSetFolder = directoryNameGenerator.GetApiVersionSetMasterFolder(apiRootFolder);
                 Directory.CreateDirectory(versionSetFolder);
                 await this.GenerateTemplates(versionSetFolder, multipleApiNames: apiDictionary[this.extractorParameters.ApiVersionSetName]);
 
@@ -1091,9 +1099,46 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             this.logger.LogInformation($@"Finished extracting mutiple APIs");
         }
 
+        async Task GenerateSingleAPIWithoutRevisionsTemplates()
+        {
+            this.logger.LogInformation("Extracting singleAPI {0} without revisions", this.extractorParameters.SingleApiName);
+
+            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
+
+            ApiRevisionTemplateResource currentRevision = null;
+
+            await foreach (var apiRevision in this.apiRevisionExtractor.GetApiRevisionsAsync(this.extractorParameters.SingleApiName, this.extractorParameters))
+            {
+                if (apiRevision.IsCurrent)
+                {
+                    currentRevision = apiRevision;
+                    break;
+                }
+            }
+
+            if (currentRevision != null)
+            {
+                var apiRevisionName = currentRevision.ApiId.Split("/")[2];
+
+                // creating a folder for this api revision
+                var revFileFolder = directoryNameGenerator.GetApiVersionAndRevisionFolder(this.extractorParameters.SingleApiName, apiRevisionName);
+                Directory.CreateDirectory(revFileFolder);
+
+                await this.GenerateTemplates(revFileFolder, singleApiName: apiRevisionName);
+
+                await this.GenerateApiReleaseTemplateAsync(apiRevisionName, revFileFolder);
+            }
+            else
+            {
+                throw new ApiRevisionNotFoundException($"Revision {this.extractorParameters.SingleApiName} doesn't exist, something went wrong!");
+            }
+        }
+
         async Task GenerateSingleAPIWithRevisionsTemplates()
         {
             this.logger.LogInformation("Extracting singleAPI {0} with revisions", this.extractorParameters.SingleApiName);
+
+            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
 
             string currentRevision = null;
             bool generateSingleApiReleaseTemplate;
@@ -1110,7 +1155,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 }
 
                 // creating a folder for this api revision
-                var revFileFolder = Path.Combine(this.extractorParameters.FilesGenerationRootDirectory, this.extractorParameters.SingleApiName, apiRevisionName);
+                var revFileFolder = directoryNameGenerator.GetApiVersionAndRevisionFolder(this.extractorParameters.SingleApiName, apiRevisionName);
                 Directory.CreateDirectory(revFileFolder);
                 revList.Add(apiRevisionName);
 
@@ -1128,7 +1173,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             }
 
             // generate revisions master folder
-            var revisionMasterFolder = Path.Combine(this.extractorParameters.FilesGenerationRootDirectory, this.extractorParameters.FileNames.RevisionMasterFolder);
+            var revisionMasterFolder = directoryNameGenerator.GetApiRevisionMasterFolder(this.extractorParameters.SingleApiName);
             Directory.CreateDirectory(revisionMasterFolder);
 
             var apiRevisionTemplate = await this.apiRevisionExtractor.GenerateApiRevisionTemplateAsync(
