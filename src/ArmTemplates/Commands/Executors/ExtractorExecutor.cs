@@ -215,7 +215,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             {
                 this.logger.LogInformation("Starting templates with splitting for each API extraction...");
                 await this.GenerateSplitAPITemplates();
-                await this.GenerateTemplates(this.extractorParameters.FilesGenerationRootDirectory);
+                await this.GenerateTemplates(this.extractorParameters.GlobalFileRootDirectory);
             }
             else if (!string.IsNullOrEmpty(this.extractorParameters.ApiVersionSetName))
             {
@@ -241,7 +241,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             {
                 //TODO: Determine if there are legitimate use cases that hit the else block. If so, it should be altered to utilize DirectoryNameGenerator.
                 this.logger.LogInformation("No specific parameters are set for template generation...");
-                await this.GenerateTemplates(this.extractorParameters.FilesGenerationRootDirectory, singleApiName: this.extractorParameters.SingleApiName);
+                await this.GenerateTemplates(this.extractorParameters.GlobalFileRootDirectory, singleApiName: this.extractorParameters.SingleApiName);
             }
         }
 
@@ -1005,8 +1005,6 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             // Generate templates based on each API/APIversionSet
             foreach (var versionSetEntry in apiDictionary)
             {
-                string apiFileFolder = this.extractorParameters.FilesGenerationRootDirectory;
-
                 // get API root folder
                 string apiRootFolder = versionSetEntry.Key;
 

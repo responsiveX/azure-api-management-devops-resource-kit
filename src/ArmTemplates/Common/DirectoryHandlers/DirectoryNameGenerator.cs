@@ -5,24 +5,26 @@
 
 using System;
 using System.IO;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.DirectoryHandlers
 {
     public class DirectoryNameGenerator : IDirectoryNameGenerator
     {
-        readonly string apiBaseDirectory;
+        readonly string globalRootDirectory;
+        readonly string apiRootDirectory;
         readonly string versionSetMasterFolder;
         readonly string revisionMasterFolder;
         readonly string multipleApisMasterFolder;
 
         public DirectoryNameGenerator(
-            string apiBaseDirectory,
+            string globalRootDirectory,
+            string apiRootDirectory,
             string versionSetMasterFolder,
             string revisionMasterFolder,
             string multipleApisMasterFolder)
         {
-            this.apiBaseDirectory = apiBaseDirectory ?? throw new ArgumentNullException(nameof(apiBaseDirectory));
+            this.globalRootDirectory = globalRootDirectory ?? throw new ArgumentNullException(nameof(globalRootDirectory));
+            this.apiRootDirectory = apiRootDirectory ?? throw new ArgumentNullException(nameof(apiRootDirectory));
             this.versionSetMasterFolder = versionSetMasterFolder ?? throw new ArgumentNullException(nameof(versionSetMasterFolder));
             this.revisionMasterFolder = revisionMasterFolder ?? throw new ArgumentNullException(nameof(revisionMasterFolder));
             this.multipleApisMasterFolder = multipleApisMasterFolder ?? throw new ArgumentNullException(nameof(multipleApisMasterFolder));
@@ -30,22 +32,22 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Directory
 
         public string GetApiVersionAndRevisionFolder(string apiName, string versionOrRevisionName)
         {
-            return Path.Combine(this.apiBaseDirectory, apiName, versionOrRevisionName);
+            return Path.Combine(this.apiRootDirectory, apiName, versionOrRevisionName);
         }
 
         public string GetApiVersionSetMasterFolder(string apiName)
         {
-            return Path.Combine(this.apiBaseDirectory, apiName, this.versionSetMasterFolder);
+            return Path.Combine(this.apiRootDirectory, apiName, this.versionSetMasterFolder);
         }
 
         public string GetApiRevisionMasterFolder(string apiName)
         {
-            return Path.Combine(this.apiBaseDirectory, apiName, this.revisionMasterFolder);
+            return Path.Combine(this.apiRootDirectory, apiName, this.revisionMasterFolder);
         }
 
         public string GetMultipleApisMasterFolder()
         {
-            return Path.Combine(this.apiBaseDirectory, this.multipleApisMasterFolder);
+            return Path.Combine(this.apiRootDirectory, this.multipleApisMasterFolder);
         }
     }
 }

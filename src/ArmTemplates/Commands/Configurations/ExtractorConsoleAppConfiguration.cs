@@ -25,8 +25,11 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configu
         [Option(longName: "resourceGroup", HelpText = "Resource Group name")]
         public string ResourceGroup { get; set; }
 
-        [Option(longName: "fileFolder", HelpText = "ARM Template files folder")]
-        public string FileFolder { get; set; }
+        [Option(longName: "globalFileRootDirectory", HelpText = "Global ARM Template files folder")]
+        public string GlobalFileRootDirectory { get; set; }
+
+        [Option(longName: "apiFileRootDirectory", HelpText = "API ARM Template files folder")]
+        public string ApiFileRootDirectory { get; set; }
 
         [Option(longName: "apiName", HelpText = "Single API name")]
         public string ApiName { get; set; }
