@@ -6,6 +6,7 @@
   "apiFileRootDirectory": "D:/Dev/CarQuotes/lead-service/deploy/api-management/apis",
   "includeAllRevisions": false,
   "splitAPIs": true,
+  "bypassParameterFileCreation": true,
   "paramServiceUrl": true,
   "paramLogResourceId": true,
   "ParamNamedValuesKeyVaultSecrets": true,

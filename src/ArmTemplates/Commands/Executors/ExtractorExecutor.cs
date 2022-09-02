@@ -1227,29 +1227,32 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             await this.GenerateGatewayTemplateAsync(singleApiName, baseFilesGenerationDirectory);
             await this.GenerateGatewayApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
             await this.GenerateApiManagementServiceTemplate(baseFilesGenerationDirectory);
-            
-            var parametersTemplate = await this.GenerateParametersTemplateAsync(apisToExtract, loggerTemplate.TypedResources, backendTemplate.TypedResources, namedValueTemplate.TypedResources, identityProviderTemplate.TypedResources, openIdConnectProviderTemplate.TypedResources, baseFilesGenerationDirectory);
-            
-            await this.GenerateResourceParametersFiles(
-                baseFilesGenerationDirectory, 
-                parametersTemplate, 
-                apiTemplate: apiTemplate,
-                policyTemplate: globalServicePolicyTemplate,
-                productApisTemplate: productApiTemplate,
-                productsTemplate: productTemplate,
-                apiVersionSetTemplate: apiVersionSetTemplate,
-                authorizationServersTemplate: authorizationServerTemplate,
-                tagTemplate: tagTemplate,
-                apiTagsTemplate: apiTagTemplate,
-                loggersTemplate: loggerTemplate,
-                namedValuesTemplate: namedValueTemplate,
-                backendsTemplate: backendTemplate,
-                groupTemplate: groupTemplate,
-                identityProviderTemplate: identityProviderTemplate,
-                openIdConnectProviderTemplate: openIdConnectProviderTemplate,
-                schemaTemplate: schemasTempate,
-                policyFragmentsTemplate: policyFragmentTemplate,
-                apiReleaseTemplate: apiReleasesTemplate);
+
+            if (!this.extractorParameters.BypassParameterFileCreation)
+            {
+                var parametersTemplate = await this.GenerateParametersTemplateAsync(apisToExtract, loggerTemplate.TypedResources, backendTemplate.TypedResources, namedValueTemplate.TypedResources, identityProviderTemplate.TypedResources, openIdConnectProviderTemplate.TypedResources, baseFilesGenerationDirectory);
+
+                await this.GenerateResourceParametersFiles(
+                    baseFilesGenerationDirectory,
+                    parametersTemplate,
+                    apiTemplate: apiTemplate,
+                    policyTemplate: globalServicePolicyTemplate,
+                    productApisTemplate: productApiTemplate,
+                    productsTemplate: productTemplate,
+                    apiVersionSetTemplate: apiVersionSetTemplate,
+                    authorizationServersTemplate: authorizationServerTemplate,
+                    tagTemplate: tagTemplate,
+                    apiTagsTemplate: apiTagTemplate,
+                    loggersTemplate: loggerTemplate,
+                    namedValuesTemplate: namedValueTemplate,
+                    backendsTemplate: backendTemplate,
+                    groupTemplate: groupTemplate,
+                    identityProviderTemplate: identityProviderTemplate,
+                    openIdConnectProviderTemplate: openIdConnectProviderTemplate,
+                    schemaTemplate: schemasTempate,
+                    policyFragmentsTemplate: policyFragmentTemplate,
+                    apiReleaseTemplate: apiReleasesTemplate);
+            }
 
             await this.GenerateMasterTemplateAsync(
                 baseFilesGenerationDirectory,

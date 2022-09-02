@@ -55,6 +55,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
         /// </summary>
         public bool IncludeAllRevisions { get; private set; }
 
+        public bool BypassParameterFileCreation { get; private set; }
+
         public string LinkedTemplatesBaseUrl { get; private set; }
 
         public string LinkedTemplatesSasToken { get; private set; }
@@ -109,6 +111,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.GlobalFileRootDirectory = extractorConfig.GlobalFileRootDirectory;
             this.ApiFileRootDirectory = extractorConfig.ApiFileRootDirectory;
             this.SingleApiName = extractorConfig.ApiName;
+            this.BypassParameterFileCreation = !string.IsNullOrEmpty(extractorConfig.BypassParameterFileCreation) && extractorConfig.BypassParameterFileCreation.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.LinkedTemplatesBaseUrl = extractorConfig.LinkedTemplatesBaseUrl;
             this.LinkedTemplatesSasToken = extractorConfig.LinkedTemplatesSasToken;
             this.LinkedTemplatesUrlQueryString = extractorConfig.LinkedTemplatesUrlQueryString;
@@ -173,6 +176,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.ParameterizeBackend = !string.IsNullOrEmpty(overridingConfig.ParamBackend) ? overridingConfig.ParamBackend.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ParameterizeBackend;
             this.SplitApis = !string.IsNullOrEmpty(overridingConfig.SplitAPIs) ? overridingConfig.SplitAPIs.Equals("true", StringComparison.OrdinalIgnoreCase) : this.SplitApis;
             this.IncludeAllRevisions = !string.IsNullOrEmpty(overridingConfig.IncludeAllRevisions) ? overridingConfig.IncludeAllRevisions.Equals("true", StringComparison.OrdinalIgnoreCase) : this.IncludeAllRevisions;
+            this.BypassParameterFileCreation = !string.IsNullOrEmpty(overridingConfig.BypassParameterFileCreation) ? overridingConfig.BypassParameterFileCreation.Equals("true", StringComparison.OrdinalIgnoreCase) : this.BypassParameterFileCreation;
             this.ExtractGateways = !string.IsNullOrEmpty(overridingConfig.ExtractGateways) ? overridingConfig.ExtractGateways.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ExtractGateways;
             this.ParametrizeApiOauth2Scope = !string.IsNullOrEmpty(overridingConfig.ParamApiOauth2Scope) ? overridingConfig.ParamApiOauth2Scope.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ParametrizeApiOauth2Scope;
             this.ExtractIdentityProviders = !string.IsNullOrEmpty(overridingConfig.ExtractIdentityProviders) ? overridingConfig.ExtractIdentityProviders.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ExtractIdentityProviders;
