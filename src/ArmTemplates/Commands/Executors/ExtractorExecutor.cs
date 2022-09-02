@@ -3,9 +3,15 @@
 //  Licensed under the MIT License.
 // --------------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configurations;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.API.Clients.Abstractions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Constants;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.DirectoryHandlers;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Exceptions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Extensions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.FileHandlers;
@@ -35,11 +41,6 @@ using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Tag
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.EntityExtractors.Abstractions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models;
 using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executors
 {
@@ -996,7 +997,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
         /// <returns></returns>
         async Task GenerateSplitAPITemplates()
         {
-            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
+            var directoryNameGenerator = DirectoryNameGeneratorFactory.GetDirectoryNameGenerator(this.extractorParameters);
 
             // Generate folders based on all apiversionset
             var apiDictionary = await this.GetAllAPIsDictionary(this.extractorParameters);
@@ -1039,7 +1040,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
         /// </summary>
         async Task GenerateAPIVersionSetTemplates()
         {
-            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
+            var directoryNameGenerator = DirectoryNameGeneratorFactory.GetDirectoryNameGenerator(this.extractorParameters);
 
             // get api dictionary and check api version set
             var apiDictionary = await this.GetAllAPIsDictionary(this.extractorParameters);
@@ -1077,6 +1078,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
         /// </summary>
         async Task GenerateMultipleAPIsTemplates()
         {
+            var directoryNameGenerator = DirectoryNameGeneratorFactory.GetDirectoryNameGenerator(this.extractorParameters);
+
             if (this.extractorParameters.MultipleApiNames.IsNullOrEmpty())
             {
                 throw new Exception("MultipleAPIs parameter doesn't have any data");
@@ -1091,7 +1094,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             }
 
             // create master templates for these apis 
-            string groupApiFolder = string.Concat(this.extractorParameters.FilesGenerationRootDirectory, this.extractorParameters.FileNames.GroupAPIsMasterFolder);
+            string groupApiFolder = directoryNameGenerator.GetMultipleApisMasterFolder();
             Directory.CreateDirectory(groupApiFolder);
             await this.GenerateTemplates(groupApiFolder, multipleApiNames: this.extractorParameters.MultipleApiNames);
 
@@ -1102,9 +1105,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
         {
             singleApiName = singleApiName ?? this.extractorParameters.SingleApiName;
 
-            this.logger.LogInformation("Extracting singleAPI {0} without revisions", singleApiName);
+            var directoryNameGenerator = DirectoryNameGeneratorFactory.GetDirectoryNameGenerator(this.extractorParameters);
 
-            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
+            this.logger.LogInformation("Extracting singleAPI {0} without revisions", singleApiName);
 
             ApiRevisionTemplateResource currentRevision = null;
 
@@ -1137,9 +1140,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
 
         async Task GenerateSingleAPIWithRevisionsTemplates()
         {
-            this.logger.LogInformation("Extracting singleAPI {0} with revisions", this.extractorParameters.SingleApiName);
+            var directoryNameGenerator = DirectoryNameGeneratorFactory.GetDirectoryNameGenerator(this.extractorParameters);
 
-            var directoryNameGenerator = new DirectoryNameGenerator(this.extractorParameters);
+            this.logger.LogInformation("Extracting singleAPI {0} with revisions", this.extractorParameters.SingleApiName);
 
             string currentRevision = null;
             bool generateSingleApiReleaseTemplate;
