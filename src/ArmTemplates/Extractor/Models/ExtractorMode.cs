@@ -7,6 +7,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
 {
     public enum ExtractorMode
     {
+        ApiVersion,
         ApiVersionSet,
         Global,
     }
