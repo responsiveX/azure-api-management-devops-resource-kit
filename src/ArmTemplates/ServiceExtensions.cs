@@ -39,6 +39,7 @@ using Microsoft.Extensions.Http;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.API.Clients.Schemas;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.API.Clients.OpenIdConnectProviders;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.API.Clients.PolicyFragments;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.DirectoryHandlers;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates
 {
@@ -58,6 +59,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates
             services.AddScoped<FileReader>();
             services.AddHttpClient();
             services.RemoveAll<IHttpMessageHandlerBuilderFilter>();
+            SetupUtilities(services);
             SetupCommands(services);
             SetupExecutors(services);
             SetupApiClients(services);
@@ -65,6 +67,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates
             SetupExtractors(services);
             SetupCreators(services);
             SetupDataProcessors(services);
+        }
+        static void SetupUtilities(IServiceCollection services)
+        {
+            services.AddSingleton<IDirectoryNameGeneratorFactory, DirectoryNameGeneratorFactory>();
         }
 
         static void SetupDataProcessors(IServiceCollection services)

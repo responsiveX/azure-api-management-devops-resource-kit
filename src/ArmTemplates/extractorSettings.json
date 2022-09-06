@@ -4,6 +4,7 @@
   "resourceGroup": "rg-carquotes-dev",
   "globalFileRootDirectory": "D:/Dev/CarQuotes/lead-service/deploy/api-management/global",
   "apiFileRootDirectory": "D:/Dev/CarQuotes/lead-service/deploy/api-management/apis",
+  "extractorMode": "global",
   "includeAllRevisions": false,
   "splitAPIs": true,
   "bypassParameterFileCreation": true,

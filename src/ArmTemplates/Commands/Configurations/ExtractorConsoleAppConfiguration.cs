@@ -16,6 +16,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configu
         [Option(longName: "extractorConfig", HelpText = "Config file of the extractor")]
         public string ExtractorConfig { get; set; }
 
+        [Option(longName: "extractorMode", HelpText = "Mode of the extractor")]
+        public string ExtractorMode { get; set; }
+
         [Option(longName: "sourceApimName", HelpText = "Source API Management name")]
         public string SourceApimName { get; set; }
 

@@ -14,6 +14,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
 {
     public record ExtractorParameters
     {
+        public ExtractorMode ExtractorMode { get; private set; }
+
         public string SourceApimName { get; private set; }
 
         public string DestinationApimName { get; private set; }
@@ -105,6 +107,18 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
 
         public ExtractorParameters(ExtractorConsoleAppConfiguration extractorConfig)
         {
+            if (!string.IsNullOrWhiteSpace(extractorConfig.ExtractorMode))
+            {
+                if (Enum.TryParse<ExtractorMode>(extractorConfig.ExtractorMode, true, out ExtractorMode mode))
+                {
+                    this.ExtractorMode = mode;
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid value for {nameof(ExtractorConsoleAppConfiguration.ExtractorMode)} property of {nameof(extractorConfig)}. Valid values are: {String.Join(", ", Enum.GetNames<ExtractorMode>())}.", nameof(extractorConfig));
+                }
+            }
+
             this.SourceApimName = extractorConfig.SourceApimName;
             this.DestinationApimName = extractorConfig.DestinationApimName;
             this.ResourceGroup = extractorConfig.ResourceGroup;
@@ -149,6 +163,18 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
         public ExtractorParameters OverrideConfiguration(ExtractorConsoleAppConfiguration overridingConfig)
         {
             if (overridingConfig == null) return this;
+
+            if (!string.IsNullOrWhiteSpace(overridingConfig.ExtractorMode))
+            {
+                if (Enum.TryParse<ExtractorMode>(overridingConfig.ExtractorMode, true, out ExtractorMode mode))
+                {
+                    this.ExtractorMode = mode;
+                }
+                else
+                {
+                    throw new ArgumentException($"Invalid value for {nameof(ExtractorConsoleAppConfiguration.ExtractorMode)} property of {nameof(overridingConfig)}. Valid values are: {String.Join(", ", Enum.GetNames<ExtractorMode>())}.", nameof(overridingConfig));
+                }
+            }
 
             this.SourceApimName = overridingConfig.SourceApimName ?? this.SourceApimName;
             this.DestinationApimName = overridingConfig.DestinationApimName ?? this.DestinationApimName;

@@ -8,9 +8,9 @@ using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.DirectoryHandlers
 {
-    public static class DirectoryNameGeneratorFactory
+    public class DirectoryNameGeneratorFactory : IDirectoryNameGeneratorFactory
     {
-        public static IDirectoryNameGenerator GetDirectoryNameGenerator(ExtractorParameters extractorParameters)
+        public IDirectoryNameGenerator GetDirectoryNameGenerator(ExtractorParameters extractorParameters)
         {
             if (extractorParameters == null)
             {
