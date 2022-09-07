@@ -32,8 +32,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Extractor.
                 SourceApimName = "source-apim",
                 DestinationApimName = "destination-apim",
                 ResourceGroup = "resource-group",
-                GlobalFileRootDirectory = "c:/my/folder",
-                ApiFileRootDirectory = "c:/my/folder"
+                FileFolder = "c:/my/folder"
             };
             var extractorParameters = new ExtractorParameters(extractorConfig);
 
@@ -54,8 +53,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Extractor.
                 SourceApimName = "source-apim",
                 DestinationApimName = "destination-apim",
                 ResourceGroup = "resource-group",
-                GlobalFileRootDirectory = "c:/my/folder",
-                ApiFileRootDirectory = "c:/my/folder",
+                FileFolder = "c:/my/folder",
                 SplitAPIs = splitApis,
                 ApiName = apiName,
                 ApiVersionSetName = apiVersionSetName,

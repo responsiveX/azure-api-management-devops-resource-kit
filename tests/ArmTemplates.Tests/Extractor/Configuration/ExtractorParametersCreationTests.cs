@@ -28,8 +28,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Extractor.
             extractorParameters.SourceApimName.Should().Be(MockSourceApimName);
             extractorParameters.DestinationApimName.Should().Be(MockDestinationApimName);
             extractorParameters.ResourceGroup.Should().Be(MockResourceGroup);
-            extractorParameters.GlobalFileRootDirectory.Should().Be(MockFileFolder);
-            extractorParameters.ApiFileRootDirectory.Should().Be(MockFileFolder);
+            extractorParameters.FilesGenerationRootDirectory.Should().Be(MockFileFolder);
             extractorParameters.SingleApiName.Should().Be(MockApiName);
             extractorParameters.SplitApis.Should().Be(MockSplitApis);
             extractorParameters.IncludeAllRevisions.Should().Be(MockIncludeAllRevisions);

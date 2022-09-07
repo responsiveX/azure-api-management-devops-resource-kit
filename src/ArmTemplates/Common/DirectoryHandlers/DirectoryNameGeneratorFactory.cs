@@ -18,8 +18,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Directory
             }
 
             return new DirectoryNameGenerator(
-                extractorParameters.GlobalFileRootDirectory,
-                extractorParameters.ApiFileRootDirectory,
+                extractorParameters.FilesGenerationRootDirectory,
                 RemoveLeadingSlash(extractorParameters.FileNames.VersionSetMasterFolder),
                 RemoveLeadingSlash(extractorParameters.FileNames.RevisionMasterFolder),
                 RemoveLeadingSlash(extractorParameters.FileNames.GroupAPIsMasterFolder)

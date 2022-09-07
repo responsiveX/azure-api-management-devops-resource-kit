@@ -2,6 +2,5 @@
   "sourceApimName": "<source-apim-name>",
   "destinationApimName": "<destination-apim-name>",
   "resourceGroup": "<resource-group>",
-  "globalFileRootDirectory": "<destination-file-folder-for-global-resources>",
-  "apiFileRootDirectory": "<destination-file-folder-for-api-resources>"
+  "fileFolder": "<destination-file-folder>"
 }

@@ -27,14 +27,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
         public FileNames FileNames { get; private set; }
 
         /// <summary>
-        /// The root directory, where global templates will be generated.
+        /// The root directory, where templates will be generated.
         /// </summary>
-        public string GlobalFileRootDirectory { get; private set; }
-
-        /// <summary>
-        /// The root directory, where API templates will be generated.
-        /// </summary>
-        public string ApiFileRootDirectory { get; private set; }
+        public string FilesGenerationRootDirectory { get; private set; }
 
         /// <summary>
         /// Name of a single API that user wants to extract
@@ -109,8 +104,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.SourceApimName = extractorConfig.SourceApimName;
             this.DestinationApimName = extractorConfig.DestinationApimName;
             this.ResourceGroup = extractorConfig.ResourceGroup;
-            this.GlobalFileRootDirectory = extractorConfig.GlobalFileRootDirectory;
-            this.ApiFileRootDirectory = extractorConfig.ApiFileRootDirectory;
+            this.FilesGenerationRootDirectory = extractorConfig.FileFolder;
             this.SingleApiName = extractorConfig.ApiName;
             this.BypassParameterFileCreation = !string.IsNullOrEmpty(extractorConfig.BypassParameterFileCreation) && extractorConfig.BypassParameterFileCreation.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.LinkedTemplatesBaseUrl = extractorConfig.LinkedTemplatesBaseUrl;
@@ -154,8 +148,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.SourceApimName = overridingConfig.SourceApimName ?? this.SourceApimName;
             this.DestinationApimName = overridingConfig.DestinationApimName ?? this.DestinationApimName;
             this.ResourceGroup = overridingConfig.ResourceGroup ?? this.ResourceGroup;
-            this.GlobalFileRootDirectory = overridingConfig.GlobalFileRootDirectory ?? this.GlobalFileRootDirectory;
-            this.ApiFileRootDirectory = overridingConfig.ApiFileRootDirectory ?? this.ApiFileRootDirectory;
+            this.FilesGenerationRootDirectory = overridingConfig.FileFolder ?? this.FilesGenerationRootDirectory;
             this.SingleApiName = overridingConfig.ApiName ?? this.SingleApiName;
             this.LinkedTemplatesBaseUrl = overridingConfig.LinkedTemplatesBaseUrl ?? this.LinkedTemplatesBaseUrl;
             this.LinkedTemplatesSasToken = overridingConfig.LinkedTemplatesSasToken ?? this.LinkedTemplatesSasToken;
@@ -223,8 +216,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             if (string.IsNullOrEmpty(this.SourceApimName)) throw new ArgumentException("Missing parameter <sourceApimName>.");
             if (string.IsNullOrEmpty(this.DestinationApimName)) throw new ArgumentException("Missing parameter <destinationApimName>.");
             if (string.IsNullOrEmpty(this.ResourceGroup)) throw new ArgumentException("Missing parameter <resourceGroup>.");
-            if (string.IsNullOrEmpty(this.GlobalFileRootDirectory)) throw new ArgumentException("Missing parameter <globalFileRootDirectory>.");
-            if (string.IsNullOrEmpty(this.ApiFileRootDirectory)) throw new ArgumentException("Missing parameter <apiFileRootDirectory>.");
+            if (string.IsNullOrEmpty(this.FilesGenerationRootDirectory)) throw new ArgumentException("Missing parameter <globalFileRootDirectory>.");
 
             bool hasVersionSetName = !string.IsNullOrEmpty(this.ApiVersionSetName);
             bool hasSingleApi = this.SingleApiName != null;
