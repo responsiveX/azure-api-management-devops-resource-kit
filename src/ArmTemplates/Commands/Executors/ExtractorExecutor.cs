@@ -1235,7 +1235,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
 
 
 
-            if (!this.extractorParameters.BypassParameterFileCreation)
+            if (this.extractorParameters.GenerateParameterFiles)
             {
                 var parametersTemplate = await this.GenerateParametersTemplateAsync(apisToExtract, loggerTemplate.TypedResources, backendTemplate.TypedResources, namedValueTemplate.TypedResources, identityProviderTemplate.TypedResources, openIdConnectProviderTemplate.TypedResources, baseFilesGenerationDirectory);
 

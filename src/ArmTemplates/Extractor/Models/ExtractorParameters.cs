@@ -51,7 +51,11 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
         /// </summary>
         public bool IncludeAllRevisions { get; private set; }
 
-        public bool BypassParameterFileCreation { get; private set; }
+        public bool GenerateParameterFiles { get; private set; }
+
+        public bool GenerateGlobalTemplates { get; private set; }
+
+        public bool GenerateApiTemplates { get; private set; }
 
         public string LinkedTemplatesBaseUrl { get; private set; }
 
@@ -106,7 +110,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.ResourceGroup = extractorConfig.ResourceGroup;
             this.FilesGenerationRootDirectory = extractorConfig.FileFolder;
             this.SingleApiName = extractorConfig.ApiName;
-            this.BypassParameterFileCreation = !string.IsNullOrEmpty(extractorConfig.BypassParameterFileCreation) && extractorConfig.BypassParameterFileCreation.Equals("true", StringComparison.OrdinalIgnoreCase);
+            this.GenerateParameterFiles = string.IsNullOrEmpty(extractorConfig.GenerateParameterFiles) || extractorConfig.GenerateParameterFiles.Equals("true", StringComparison.OrdinalIgnoreCase);
+            this.GenerateGlobalTemplates = string.IsNullOrEmpty(extractorConfig.GenerateGlobalTemplates) || extractorConfig.GenerateGlobalTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
+            this.GenerateApiTemplates = string.IsNullOrEmpty(extractorConfig.GenerateApiTemplates) || extractorConfig.GenerateApiTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.LinkedTemplatesBaseUrl = extractorConfig.LinkedTemplatesBaseUrl;
             this.LinkedTemplatesSasToken = extractorConfig.LinkedTemplatesSasToken;
             this.LinkedTemplatesUrlQueryString = extractorConfig.LinkedTemplatesUrlQueryString;
@@ -170,7 +176,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.ParameterizeBackend = !string.IsNullOrEmpty(overridingConfig.ParamBackend) ? overridingConfig.ParamBackend.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ParameterizeBackend;
             this.SplitApis = !string.IsNullOrEmpty(overridingConfig.SplitAPIs) ? overridingConfig.SplitAPIs.Equals("true", StringComparison.OrdinalIgnoreCase) : this.SplitApis;
             this.IncludeAllRevisions = !string.IsNullOrEmpty(overridingConfig.IncludeAllRevisions) ? overridingConfig.IncludeAllRevisions.Equals("true", StringComparison.OrdinalIgnoreCase) : this.IncludeAllRevisions;
-            this.BypassParameterFileCreation = !string.IsNullOrEmpty(overridingConfig.BypassParameterFileCreation) ? overridingConfig.BypassParameterFileCreation.Equals("true", StringComparison.OrdinalIgnoreCase) : this.BypassParameterFileCreation;
+            this.GenerateParameterFiles = !string.IsNullOrEmpty(overridingConfig.GenerateParameterFiles) ? overridingConfig.GenerateParameterFiles.Equals("true", StringComparison.OrdinalIgnoreCase) : this.GenerateParameterFiles;
+            this.GenerateGlobalTemplates = !string.IsNullOrEmpty(overridingConfig.GenerateGlobalTemplates) ? overridingConfig.GenerateGlobalTemplates.Equals("true", StringComparison.OrdinalIgnoreCase) : this.GenerateGlobalTemplates;
+            this.GenerateApiTemplates = !string.IsNullOrEmpty(overridingConfig.GenerateApiTemplates) ? overridingConfig.GenerateApiTemplates.Equals("true", StringComparison.OrdinalIgnoreCase) : this.GenerateApiTemplates;
             this.ExtractGateways = !string.IsNullOrEmpty(overridingConfig.ExtractGateways) ? overridingConfig.ExtractGateways.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ExtractGateways;
             this.ParametrizeApiOauth2Scope = !string.IsNullOrEmpty(overridingConfig.ParamApiOauth2Scope) ? overridingConfig.ParamApiOauth2Scope.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ParametrizeApiOauth2Scope;
             this.ExtractIdentityProviders = !string.IsNullOrEmpty(overridingConfig.ExtractIdentityProviders) ? overridingConfig.ExtractIdentityProviders.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ExtractIdentityProviders;

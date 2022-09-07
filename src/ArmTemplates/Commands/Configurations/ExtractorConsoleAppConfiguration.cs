@@ -34,8 +34,14 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configu
         [Option(longName: "multipleAPIs", HelpText = "Comma-separated list of API names")]
         public string MultipleAPIs { get; set; }
 
-        [Option(longName: "bypassParameterFileCreation", HelpText = "Prevents the creation of ARM parameter files")]
-        public string BypassParameterFileCreation { get; set; }
+        [Option(longName: "generateParameterFiles", HelpText = "Creates ARM parameter files")]
+        public string GenerateParameterFiles { get; set; }
+
+        [Option(longName: "generateGlobalTemplates", HelpText = "Creates ARM template files for global resources and settings")]
+        public string GenerateGlobalTemplates { get; set; }
+
+        [Option(longName: "generateApiTemplates", HelpText = "Creates ARM template files for API specific resources and settings")]
+        public string GenerateApiTemplates { get; set; }
 
         [Option(longName: "linkedTemplatesBaseUrl", HelpText = "Creates a master template with links")]
         public string LinkedTemplatesBaseUrl { get; set; }
