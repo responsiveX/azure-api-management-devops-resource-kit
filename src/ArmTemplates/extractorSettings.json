@@ -4,7 +4,6 @@
   "resourceGroup": "rg-carquotes-dev",
   "globalFileRootDirectory": "D:/Dev/CarQuotes/lead-service/deploy/api-management/global",
   "apiFileRootDirectory": "D:/Dev/CarQuotes/lead-service/deploy/api-management/apis",
-  "extractorMode": "ApiVersion",
   "apiName": "lead",
   "apiVersionSetName": "Lead",
   "includeAllRevisions": true,
