@@ -582,11 +582,40 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
 
             this.logger.LogInformation("Started generation of master template...");
 
-            var masterTemplate = this.masterTemplateExtractor.GenerateLinkedMasterTemplate(
-                this.extractorParameters, apiTemplateResources, policyTemplateResources, apiVersionSetTemplateResources,
-                productsTemplateResources, productApisTemplateResources, apiTagsTemplateResources, loggersTemplateResources,
-                backendsTemplateResources, authorizationServersTemplateResources, namedValuesTemplateResources, tagTemplateResources, 
-                groupTemplateResources, identityProviderTemplateResources, schemaTemplateResources, openIdConnectProviderResources, policyFragmentsResources);
+            //var masterTemplate = this.masterTemplateExtractor.GenerateLinkedMasterTemplate(
+            //    this.extractorParameters, apiTemplateResources, policyTemplateResources, apiVersionSetTemplateResources,
+            //    productsTemplateResources, productApisTemplateResources, apiTagsTemplateResources, loggersTemplateResources,
+            //    backendsTemplateResources, authorizationServersTemplateResources, namedValuesTemplateResources, tagTemplateResources,
+            //    groupTemplateResources, identityProviderTemplateResources, schemaTemplateResources, openIdConnectProviderResources, policyFragmentsResources);
+
+            Template<MasterTemplateResources> masterTemplate = null;
+            if (this.extractorParameters.GenerateApiTemplates && this.extractorParameters.GenerateGlobalTemplates)
+            {
+                masterTemplate = this.masterTemplateExtractor.GenerateLinkedMasterTemplate(
+                    this.extractorParameters, apiTemplateResources, policyTemplateResources, apiVersionSetTemplateResources,
+                    productsTemplateResources, productApisTemplateResources, apiTagsTemplateResources, loggersTemplateResources,
+                    backendsTemplateResources, authorizationServersTemplateResources, namedValuesTemplateResources, tagTemplateResources,
+                    groupTemplateResources, identityProviderTemplateResources, schemaTemplateResources, openIdConnectProviderResources, policyFragmentsResources);
+            }
+            else if (this.extractorParameters.GenerateApiTemplates)
+            {
+                masterTemplate = this.masterTemplateExtractor.GenerateLinkedMasterTemplate(
+                    this.extractorParameters, apiTemplateResources, null, apiVersionSetTemplateResources,
+                    null, productApisTemplateResources, apiTagsTemplateResources, null,
+                    null, null, null, null,
+                    null, null, null, null, policyFragmentsResources);
+            }
+            else if (this.extractorParameters.GenerateGlobalTemplates)
+            {
+                masterTemplate = this.masterTemplateExtractor.GenerateLinkedMasterTemplate(
+                    this.extractorParameters, null, policyTemplateResources, null,
+                    productsTemplateResources, null, null, loggersTemplateResources,
+                    backendsTemplateResources, authorizationServersTemplateResources, namedValuesTemplateResources, tagTemplateResources,
+                    groupTemplateResources, identityProviderTemplateResources, schemaTemplateResources, openIdConnectProviderResources, null);
+            }
+
+
+
 
             if (masterTemplate?.HasResources() == true)
             {
@@ -1211,28 +1240,59 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
 
             var apisToExtract = await this.GetApiNamesToExtract(singleApiName, multipleApiNames);
             // generate different templates using extractors and write to output
-            apiTemplate = apiTemplate ?? await this.GenerateApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
 
-            var globalServicePolicyTemplate = await this.GeneratePolicyTemplateAsync(baseFilesGenerationDirectory);
-            var productApiTemplate = await this.GenerateProductApisTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
-            var productTemplate = await this.GenerateProductsTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.ApiProducts);
-            var apiVersionSetTemplate = await this.GenerateApiVersionSetTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.Apis);
-            var authorizationServerTemplate = await this.GenerateAuthorizationServerTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.Apis);
-            var tagTemplate = await this.GenerateTagTemplateAsync(singleApiName, apiTemplate.TypedResources, productTemplate.TypedResources, baseFilesGenerationDirectory);
-            var apiTagTemplate = await this.GenerateTagApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
-            var loggerTemplate = await this.GenerateLoggerTemplateAsync(apisToExtract, apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
-            var namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate.TypedResources.GetAllPolicies(), loggerTemplate.TypedResources.Loggers, baseFilesGenerationDirectory);
-            var backendTemplate = await this.GenerateBackendTemplateAsync(singleApiName, apiTemplate.TypedResources.GetAllPolicies(), namedValueTemplate.TypedResources.NamedValues, baseFilesGenerationDirectory);
-            var groupTemplate = await this.GenerateGroupsTemplateAsync(baseFilesGenerationDirectory);
-            var identityProviderTemplate = await this.GenerateIdentityProviderTemplateAsync(baseFilesGenerationDirectory);
-            var openIdConnectProviderTemplate = await this.GenerateOpenIdConnectProviderTemplateAsync(baseFilesGenerationDirectory);
-            var schemasTempate = await this.GenerateSchemasTemplateAsync(baseFilesGenerationDirectory);
-            var policyFragmentTemplate = await this.GeneratePolicyFragmentsTemplateAsync(apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
-            var apiReleasesTemplate = await this.GenerateApiReleasesTemplateAsync(baseFilesGenerationDirectory);
-            await this.GenerateGatewayTemplateAsync(singleApiName, baseFilesGenerationDirectory);
-            await this.GenerateGatewayApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
-            await this.GenerateApiManagementServiceTemplate(baseFilesGenerationDirectory);
+            //if (this.extractorParameters.GenerateApiTemplates)
+            //{
+                apiTemplate = apiTemplate ?? await this.GenerateApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+                var productApiTemplate = await this.GenerateProductApisTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+                var apiVersionSetTemplate = await this.GenerateApiVersionSetTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.Apis);
+                var apiTagTemplate = await this.GenerateTagApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+                var apiReleasesTemplate = await this.GenerateApiReleasesTemplateAsync(baseFilesGenerationDirectory);
+                var policyFragmentTemplate = await this.GeneratePolicyFragmentsTemplateAsync(apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
+                await this.GenerateGatewayApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+            //}
 
+            //if (this.extractorParameters.GenerateGlobalTemplates)
+            //{
+                var globalServicePolicyTemplate = await this.GeneratePolicyTemplateAsync(baseFilesGenerationDirectory);
+                var productTemplate = await this.GenerateProductsTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.ApiProducts);
+                var authorizationServerTemplate = await this.GenerateAuthorizationServerTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.Apis);
+                var tagTemplate = await this.GenerateTagTemplateAsync(singleApiName, apiTemplate.TypedResources, productTemplate.TypedResources, baseFilesGenerationDirectory);
+                var loggerTemplate = await this.GenerateLoggerTemplateAsync(apisToExtract, apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
+                var namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate.TypedResources.GetAllPolicies(), loggerTemplate.TypedResources.Loggers, baseFilesGenerationDirectory);
+                var backendTemplate = await this.GenerateBackendTemplateAsync(singleApiName, apiTemplate.TypedResources.GetAllPolicies(), namedValueTemplate.TypedResources.NamedValues, baseFilesGenerationDirectory);
+                var groupTemplate = await this.GenerateGroupsTemplateAsync(baseFilesGenerationDirectory);
+                var identityProviderTemplate = await this.GenerateIdentityProviderTemplateAsync(baseFilesGenerationDirectory);
+                var openIdConnectProviderTemplate = await this.GenerateOpenIdConnectProviderTemplateAsync(baseFilesGenerationDirectory);
+                var schemasTempate = await this.GenerateSchemasTemplateAsync(baseFilesGenerationDirectory);
+                await this.GenerateGatewayTemplateAsync(singleApiName, baseFilesGenerationDirectory);
+                await this.GenerateApiManagementServiceTemplate(baseFilesGenerationDirectory);
+            //}
+
+
+
+
+            //apiTemplate = apiTemplate ?? await this.GenerateApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+
+            //var globalServicePolicyTemplate = await this.GeneratePolicyTemplateAsync(baseFilesGenerationDirectory);
+            //var productApiTemplate = await this.GenerateProductApisTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+            //var productTemplate = await this.GenerateProductsTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.ApiProducts);
+            //var apiVersionSetTemplate = await this.GenerateApiVersionSetTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.Apis);
+            //var authorizationServerTemplate = await this.GenerateAuthorizationServerTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.Apis);
+            //var tagTemplate = await this.GenerateTagTemplateAsync(singleApiName, apiTemplate.TypedResources, productTemplate.TypedResources, baseFilesGenerationDirectory);
+            //var apiTagTemplate = await this.GenerateTagApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+            //var loggerTemplate = await this.GenerateLoggerTemplateAsync(apisToExtract, apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
+            //var namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate.TypedResources.GetAllPolicies(), loggerTemplate.TypedResources.Loggers, baseFilesGenerationDirectory);
+            //var backendTemplate = await this.GenerateBackendTemplateAsync(singleApiName, apiTemplate.TypedResources.GetAllPolicies(), namedValueTemplate.TypedResources.NamedValues, baseFilesGenerationDirectory);
+            //var groupTemplate = await this.GenerateGroupsTemplateAsync(baseFilesGenerationDirectory);
+            //var identityProviderTemplate = await this.GenerateIdentityProviderTemplateAsync(baseFilesGenerationDirectory);
+            //var openIdConnectProviderTemplate = await this.GenerateOpenIdConnectProviderTemplateAsync(baseFilesGenerationDirectory);
+            //var schemasTempate = await this.GenerateSchemasTemplateAsync(baseFilesGenerationDirectory);
+            //var policyFragmentTemplate = await this.GeneratePolicyFragmentsTemplateAsync(apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
+            //var apiReleasesTemplate = await this.GenerateApiReleasesTemplateAsync(baseFilesGenerationDirectory);
+            //await this.GenerateGatewayTemplateAsync(singleApiName, baseFilesGenerationDirectory);
+            //await this.GenerateGatewayApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
+            //await this.GenerateApiManagementServiceTemplate(baseFilesGenerationDirectory);
 
 
             if (this.extractorParameters.GenerateParameterFiles)
