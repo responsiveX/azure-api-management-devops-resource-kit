@@ -95,10 +95,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
                                     .Build<TagTemplateResources>();
 
             // isolate tag and api operation associations in the case of a single api extraction
-            var apiOperationTagResources = apiTemplateResources.ApiOperationsTags;
+            var apiOperationTagResources = apiTemplateResources?.ApiOperationsTags;
 
             // isolate product api associations in the case of a single api extraction
-            var productAPIResources = apiTemplateResources.ApiProducts;
+            var productAPIResources = apiTemplateResources?.ApiProducts;
 
             // isolate tag and product associations in the case of a single api extraction
             var productTagResources = productTemplateResources.Tags;
