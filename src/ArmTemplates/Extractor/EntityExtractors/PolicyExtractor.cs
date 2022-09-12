@@ -19,6 +19,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Builders.Abstractions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Extensions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Products;
+using System.Linq;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.EntityExtractors
 {
@@ -103,8 +104,14 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
 
             if (apiOperationPolicy is null)
             {
-                this.logger.LogWarning("Policy for api '{0}' and operation '{1}' not found", apiName, operationName);
-                return apiOperationPolicy;
+                //this.logger.LogWarning("Policy for api '{0}' and operation '{1}' not found", apiName, operationName);
+                //return apiOperationPolicy;
+                apiOperationPolicy = new PolicyTemplateResource();
+                apiOperationPolicy.Properties = new PolicyTemplateProperties();
+                //apiOperationPolicy.Properties.PolicyContent = this.policyPathToContentCache.Values.First();
+                string emtpyPolicy = "< policies >    < inbound >        < base />    </ inbound >    < backend >        < base />    </ backend >    < outbound >        < base />      </ outbound >    < on - error >        < base />    </ on - error ></ policies >";
+                apiOperationPolicy.Properties.PolicyContent = emtpyPolicy;
+                apiOperationPolicy.Properties.Format = "xml";
             }
 
             apiOperationPolicy.Name = $"[concat(parameters('{ParameterNames.ApimServiceName}'), '/{apiName}/{operationName}/policy')]";
