@@ -25,6 +25,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
     public class PolicyExtractor : IPolicyExtractor
     {
         public const string PoliciesDirectoryName = "policies";
+        public const string OperationPoliciesDirectoryName = "operations";
+        public const string ProductPoliciesDirectoryName = "products";
         public const string GlobalServicePolicyFileName = "globalServicePolicy.xml";
 
         public const string ProductPolicyFileNameFormat = "{0}-productPolicy.xml";
@@ -113,8 +115,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             // write policy xml content to file and point to it if policyXMLBaseUrl is provided
             if (extractorParameters.PolicyXMLBaseUrl is not null)
             {
+                var policyDirectoryName = Path.Combine(baseFilesGenerationDirectory, PoliciesDirectoryName, OperationPoliciesDirectoryName);
                 var policyFileName = string.Format(ApiOperationPolicyFileNameFormat, apiName, operationName);
-                await this.SavePolicyXmlAsync(apiOperationPolicy, baseFilesGenerationDirectory, policyFileName);
+                await this.SavePolicyXmlAsync(apiOperationPolicy, policyDirectoryName, policyFileName);
 
                 this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, apiOperationPolicy, policyFileName);
             }
@@ -144,8 +147,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             // write policy xml content to file and point to it if policyXMLBaseUrl is provided
             if (extractorParameters.PolicyXMLBaseUrl is not null)
             {
+                var policyDirectoryName = Path.Combine(baseFilesGenerationDirectory, PoliciesDirectoryName);
                 var policyFileName = string.Format(ApiPolicyFileNameFormat, apiName);
-                await this.SavePolicyXmlAsync(apiPolicy, baseFilesGenerationDirectory, policyFileName);
+                await this.SavePolicyXmlAsync(apiPolicy, policyDirectoryName, policyFileName);
 
                 this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, apiPolicy, policyFileName);
             }
@@ -178,8 +182,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             // telling that it is needed to provide a policy Xml file
             if (extractorParameters.PolicyXMLBaseUrl is not null)
             {
+                var policyDirectoryName = Path.Combine(baseFilesGenerationDirectory, PoliciesDirectoryName, ProductPoliciesDirectoryName);
                 var policyFileName = string.Format(ProductPolicyFileNameFormat, productTemplateResource.NewName);
-                await this.SavePolicyXmlAsync(productPolicy, baseFilesGenerationDirectory, policyFileName);
+                await this.SavePolicyXmlAsync(productPolicy, policyDirectoryName, policyFileName);
 
                 this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, productPolicy, policyFileName);
             }
@@ -210,8 +215,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
                 // telling that it is needed to provide a policy Xml file
                 if (extractorParameters.PolicyXMLBaseUrl is not null)
                 {
+                    var policyDirectoryName = Path.Combine(baseFilesDirectory, PoliciesDirectoryName);
+
                     // writing to globalServicePolicy.xml (<files-root>/policies/globalServicePolicy.xml)
-                    await this.SavePolicyXmlAsync(globalServicePolicyResource, baseFilesDirectory, GlobalServicePolicyFileName);
+                    await this.SavePolicyXmlAsync(globalServicePolicyResource, policyDirectoryName, GlobalServicePolicyFileName);
 
                     this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, globalServicePolicyResource, GlobalServicePolicyFileName);
                 }
@@ -247,9 +254,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             string baseFilesDirectory,
             string policyFileName)
         {
-            var policiesDirectory = Path.Combine(baseFilesDirectory, PoliciesDirectoryName);
-            var fullPolicyPathWithName = Path.Combine(policiesDirectory, policyFileName);
-            FileWriter.CreateFolderIfNotExists(policiesDirectory); // creating <files-root>/policies
+            //var policiesDirectory = Path.Combine(baseFilesDirectory, policiesDirectoryName);
+            var fullPolicyPathWithName = Path.Combine(baseFilesDirectory, policyFileName);
+            FileWriter.CreateFolderIfNotExists(baseFilesDirectory); // creating <files-root>/policies
 
             var policyXMLContent = policyTemplateResource.Properties.PolicyContent;
 
