@@ -27,11 +27,11 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
         public const string PoliciesDirectoryName = "policies";
         public const string OperationPoliciesDirectoryName = "operations";
         public const string ProductPoliciesDirectoryName = "products";
-        public const string GlobalServicePolicyFileName = "globalServicePolicy.xml";
+        public const string GlobalServicePolicyFileName = "globalService.xml";
 
-        public const string ProductPolicyFileNameFormat = "{0}-productPolicy.xml";
-        public const string ApiPolicyFileNameFormat = "{0}-apiPolicy.xml";
-        public const string ApiOperationPolicyFileNameFormat = "{0}-{1}-operationPolicy.xml";
+        public const string ProductPolicyFileNameFormat = "{0}.xml";
+        public const string ApiPolicyFileNameFormat = "{0}.xml";
+        public const string ApiOperationPolicyFileNameFormat = "{0}-{1}.xml";
 
         readonly ILogger<PolicyExtractor> logger;
         readonly IPolicyClient policyClient;
