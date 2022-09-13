@@ -8,6 +8,8 @@
   "generateParameterFiles": false,
   "generateGlobalTemplates": true,
   "generateApiTemplates": false,
+  "generateEmptyPolicyFiles": true,
+  "generateApiManagementServiceTemplate": false,
   "paramServiceUrl": true,
   "paramLogResourceId": true,
   "ParamNamedValuesKeyVaultSecrets": true,
