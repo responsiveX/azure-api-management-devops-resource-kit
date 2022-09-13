@@ -20,11 +20,13 @@ using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Bui
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Extensions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Products;
 using System.Linq;
+using System.Reflection;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.EntityExtractors
 {
     public class PolicyExtractor : IPolicyExtractor
     {
+        public const string EmptyPolicyFileResourcePath = "Microsoft.Azure.Management.ApiManagement.ArmTemplates.Resources.EmptyPolicyFile.xml";
         public const string PoliciesDirectoryName = "policies";
         public const string OperationPoliciesDirectoryName = "operations";
         public const string ProductPoliciesDirectoryName = "products";
@@ -104,14 +106,20 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
 
             if (apiOperationPolicy is null)
             {
-                //this.logger.LogWarning("Policy for api '{0}' and operation '{1}' not found", apiName, operationName);
-                //return apiOperationPolicy;
-                apiOperationPolicy = new PolicyTemplateResource();
-                apiOperationPolicy.Properties = new PolicyTemplateProperties();
-                //apiOperationPolicy.Properties.PolicyContent = this.policyPathToContentCache.Values.First();
-                string emtpyPolicy = "< policies >    < inbound >        < base />    </ inbound >    < backend >        < base />    </ backend >    < outbound >        < base />      </ outbound >    < on - error >        < base />    </ on - error ></ policies >";
-                apiOperationPolicy.Properties.PolicyContent = emtpyPolicy;
-                apiOperationPolicy.Properties.Format = "xml";
+                this.logger.LogWarning("Policy for api '{0}' and operation '{1}' not found", apiName, operationName);
+
+                if (extractorParameters.GenerateEmptyPolicyFiles)
+                {
+                    apiOperationPolicy = new PolicyTemplateResource()
+                    {
+                        Properties = new PolicyTemplateProperties()
+                        {
+                            Format = "xml",
+                            PolicyContent = GetEmptyPolicyFileContents()
+                        },
+                        Type = "Microsoft.ApiManagement/service/apis/operations/policies"
+                    };
+                }
             }
 
             apiOperationPolicy.Name = $"[concat(parameters('{ParameterNames.ApimServiceName}'), '/{apiName}/{operationName}/policy')]";
@@ -142,7 +150,19 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             if (apiPolicy is null)
             {
                 this.logger.LogWarning("Policy for api {0} not found", apiName);
-                return apiPolicy;
+
+                if (extractorParameters.GenerateEmptyPolicyFiles)
+                {
+                    apiPolicy = new PolicyTemplateResource()
+                    {
+                        Properties = new PolicyTemplateProperties()
+                        {
+                            Format = "xml",
+                            PolicyContent = GetEmptyPolicyFileContents()
+                        },
+                        Type = "Microsoft.ApiManagement/service/apis/policies"
+                    };
+                }
             }
 
             var apiPolicyOriginalName = apiPolicy.Name;
@@ -175,7 +195,19 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             if (productPolicy is null)
             {
                 this.logger.LogWarning($"Policy not found for product '{productTemplateResource.OriginalName}'");
-                return productPolicy;
+
+                if (extractorParameters.GenerateEmptyPolicyFiles)
+                {
+                    productPolicy = new PolicyTemplateResource()
+                    {
+                        Properties = new PolicyTemplateProperties()
+                        {
+                            Format = "xml",
+                            PolicyContent = GetEmptyPolicyFileContents()
+                        },
+                        Type = "Microsoft.ApiManagement/service/products/policies"
+                    };
+                }
             }
 
             this.logger.LogDebug($"Policy linked to {productTemplateResource.OriginalName} product found successfuly");
@@ -238,6 +270,17 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             }
 
             return policyTemplate;
+        }
+
+        static string GetEmptyPolicyFileContents()
+        {   var assembly = Assembly.GetExecutingAssembly();
+            using (Stream stream = assembly.GetManifestResourceStream(EmptyPolicyFileResourcePath))
+            {
+                using (StreamReader reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
 
         void SetPolicyTemplateResourcePolicyContentWithArmPresetValues(

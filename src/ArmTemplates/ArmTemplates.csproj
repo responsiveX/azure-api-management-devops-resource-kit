@@ -22,6 +22,11 @@
   <ItemGroup>
     <None Remove="microsoft.gpg" />
     <None Remove="packages-microsoft-prod.deb" />
+    <None Remove="Resources\EmptyPolicyFile.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\EmptyPolicyFile.xml" />
   </ItemGroup>
 
   <ItemGroup>
