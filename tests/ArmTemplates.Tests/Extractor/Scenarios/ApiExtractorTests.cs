@@ -102,7 +102,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Extractor.
 
             // assert
             File.Exists(Path.Combine(currentTestDirectory, apiTemplate.TypedResources.FileName)).Should().BeTrue();
-            Directory.GetFiles(Path.Combine(currentTestDirectory, PolicyExtractor.PoliciesDirectoryName)).Count().Should().Be(6);
+            Directory.GetFiles(Path.Combine(currentTestDirectory, PolicyExtractor.PoliciesDirectoryName), "*", SearchOption.AllDirectories).Count().Should().Be(6);
+
 
             apiTemplate.Parameters.Should().NotBeNull();
             apiTemplate.Parameters.Should().ContainKey(ParameterNames.ApimServiceName);

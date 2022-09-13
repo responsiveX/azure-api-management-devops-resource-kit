@@ -72,7 +72,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Extractor.
 
             // generated product policy files
             var policyFileName = string.Format(PolicyExtractor.ProductPolicyFileNameFormat, MockProductsClient.ProductName1);
-            File.Exists(Path.Combine(currentTestDirectory, PolicyExtractor.PoliciesDirectoryName, policyFileName)).Should().BeTrue();
+            File.Exists(Path.Combine(currentTestDirectory, PolicyExtractor.PoliciesDirectoryName, PolicyExtractor.ProductPoliciesDirectoryName, policyFileName)).Should().BeTrue();
 
             // generated product template files
             File.Exists(Path.Combine(currentTestDirectory, extractorParameters.FileNames.Products)).Should().BeTrue();
