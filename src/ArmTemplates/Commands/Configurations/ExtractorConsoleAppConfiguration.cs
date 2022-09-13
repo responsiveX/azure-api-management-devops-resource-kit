@@ -46,8 +46,14 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configu
         [Option(longName: "generateEmptyPolicyFiles", HelpText = "Creates empty XML policy files for objects that can have policies but don't yet")]
         public string GenerateEmptyPolicyFiles { get; set; }
 
-        [Option(longName: "generateApiManagementServiceTemplate", HelpText = "Creates ARM template to depoy the API Management service")]
+        [Option(longName: "generateApiManagementServiceTemplate", HelpText = "Creates ARM template to deploy the API Management service")]
         public string GenerateApiManagementServiceTemplate { get; set; }
+
+        [Option(longName: "generateRevisionMasterTemplates", HelpText = "Creates a set of ARM templates to deploy all revisions of an API")]
+        public string GenerateRevisionMasterTemplates { get; set; }
+
+        [Option(longName: "generateVersionSetMasterTemplates", HelpText = "Creates a set of ARM templates to deploy all versions of an API")]
+        public string GenerateVersionSetMasterTemplates { get; set; }
 
         [Option(longName: "linkedTemplatesBaseUrl", HelpText = "Creates a master template with links")]
         public string LinkedTemplatesBaseUrl { get; set; }

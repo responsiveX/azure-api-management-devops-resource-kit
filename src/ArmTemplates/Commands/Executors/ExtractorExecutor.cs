@@ -1096,10 +1096,13 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                     await this.GenerateTemplates(apiFileFolder, singleApiName: apiName);
                 }
 
-                // create master templates for this apiVersionSet 
-                string versionSetFolder = directoryNameGenerator.GetApiVersionSetMasterFolder(apiRootFolder);
-                Directory.CreateDirectory(versionSetFolder);
-                await this.GenerateTemplates(versionSetFolder, multipleApiNames: apiDictionary[this.extractorParameters.ApiVersionSetName]);
+                // create master templates for this apiVersionSet
+                if (this.extractorParameters.GenerateVersionSetMasterTemplates)
+                {
+                    string versionSetFolder = directoryNameGenerator.GetApiVersionSetMasterFolder(apiRootFolder);
+                    Directory.CreateDirectory(versionSetFolder);
+                    await this.GenerateTemplates(versionSetFolder, multipleApiNames: apiDictionary[this.extractorParameters.ApiVersionSetName]);
+                }
 
                 this.logger.LogInformation($@"Finished extracting APIVersionSet {this.extractorParameters.ApiVersionSetName}");
             }
@@ -1209,16 +1212,19 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             }
 
             // generate revisions master folder
-            var revisionMasterFolder = directoryNameGenerator.GetApiRevisionMasterFolder(this.extractorParameters.SingleApiName);
-            Directory.CreateDirectory(revisionMasterFolder);
+            if (this.extractorParameters.GenerateRevisionMasterTemplates)
+            {
+                var revisionMasterFolder = directoryNameGenerator.GetApiRevisionMasterFolder(this.extractorParameters.SingleApiName);
+                Directory.CreateDirectory(revisionMasterFolder);
 
-            var apiRevisionTemplate = await this.apiRevisionExtractor.GenerateApiRevisionTemplateAsync(
-                currentRevision,
-                revList,
-                revisionMasterFolder,
-                this.extractorParameters);
+                var apiRevisionTemplate = await this.apiRevisionExtractor.GenerateApiRevisionTemplateAsync(
+                    currentRevision,
+                    revList,
+                    revisionMasterFolder,
+                    this.extractorParameters);
 
-            await this.GenerateTemplates(revisionMasterFolder, apiTemplate: apiRevisionTemplate);
+                await this.GenerateTemplates(revisionMasterFolder, apiTemplate: apiRevisionTemplate);
+            }
         }
 
         /// <summary>
@@ -1239,7 +1245,6 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             }
 
             var apisToExtract = await this.GetApiNamesToExtract(singleApiName, multipleApiNames);
-            // generate different templates using extractors and write to output
 
             Template<ProductApiTemplateResources> productApiTemplate = null;
             Template<ApiVersionSetTemplateResources> apiVersionSetTemplate = null;
@@ -1259,6 +1264,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             Template<OpenIdConnectProviderResources> openIdConnectProviderTemplate = null;
             Template<SchemaTemplateResources> schemasTempate = null;
 
+            // generate different templates using extractors and write to output
             if (this.extractorParameters.GenerateApiTemplates)
             {
                 apiTemplate = apiTemplate ?? await this.GenerateApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
