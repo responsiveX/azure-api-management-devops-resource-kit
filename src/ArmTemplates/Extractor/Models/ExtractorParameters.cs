@@ -270,6 +270,16 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             {
                 throw new NotSupportedException("\"includeAllRevisions\" can be used when you specify the API you want to extract with \"apiName\"");
             }
+
+            if (!this.GenerateGlobalTemplates && !this.GenerateApiTemplates)
+            {
+                throw new NotSupportedException("\"generateGlobalTemplates\" and \"generateApiTemplates\" cannot both be false");
+            }
+
+            if (!this.GenerateApiTemplates && (hasSingleApi || hasMultipleAPIs || hasVersionSetName || this.SplitApis))
+            {
+                throw new NotSupportedException("When \"generateApiTemplates\" is false, you cannot specify any of the api options (apiName, multipleAPIs, apiVersionSetName, splitAPIs)");
+            }
         }
     }
 }
