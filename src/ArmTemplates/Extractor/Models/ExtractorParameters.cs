@@ -65,6 +65,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
 
         public bool GenerateVersionSetMasterTemplates { get; private set; }
 
+        public bool GenerateReleaseTemplates { get; private set; }
+
         public string LinkedTemplatesBaseUrl { get; private set; }
 
         public string LinkedTemplatesSasToken { get; private set; }
@@ -125,6 +127,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.GenerateApiManagementServiceTemplate = string.IsNullOrEmpty(extractorConfig.GenerateApiManagementServiceTemplate) || extractorConfig.GenerateApiManagementServiceTemplate.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.GenerateRevisionMasterTemplates = string.IsNullOrEmpty(extractorConfig.GenerateRevisionMasterTemplates) || extractorConfig.GenerateRevisionMasterTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.GenerateVersionSetMasterTemplates = string.IsNullOrEmpty(extractorConfig.GenerateVersionSetMasterTemplates) || extractorConfig.GenerateVersionSetMasterTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
+            this.GenerateReleaseTemplates = string.IsNullOrEmpty(extractorConfig.GenerateReleaseTemplates) || extractorConfig.GenerateReleaseTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.LinkedTemplatesBaseUrl = extractorConfig.LinkedTemplatesBaseUrl;
             this.LinkedTemplatesSasToken = extractorConfig.LinkedTemplatesSasToken;
             this.LinkedTemplatesUrlQueryString = extractorConfig.LinkedTemplatesUrlQueryString;
@@ -195,6 +198,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.GenerateApiManagementServiceTemplate = !string.IsNullOrEmpty(overridingConfig.GenerateApiManagementServiceTemplate) ? overridingConfig.GenerateApiManagementServiceTemplate.Equals("true", StringComparison.OrdinalIgnoreCase) : this.GenerateApiManagementServiceTemplate;
             this.GenerateRevisionMasterTemplates = !string.IsNullOrEmpty(overridingConfig.GenerateRevisionMasterTemplates) ? overridingConfig.GenerateRevisionMasterTemplates.Equals("true", StringComparison.OrdinalIgnoreCase) : this.GenerateRevisionMasterTemplates;
             this.GenerateVersionSetMasterTemplates = !string.IsNullOrEmpty(overridingConfig.GenerateVersionSetMasterTemplates) ? overridingConfig.GenerateVersionSetMasterTemplates.Equals("true", StringComparison.OrdinalIgnoreCase) : this.GenerateVersionSetMasterTemplates;
+            this.GenerateReleaseTemplates = !string.IsNullOrEmpty(overridingConfig.GenerateReleaseTemplates) ? overridingConfig.GenerateReleaseTemplates.Equals("true", StringComparison.OrdinalIgnoreCase) : this.GenerateReleaseTemplates;
             this.ExtractGateways = !string.IsNullOrEmpty(overridingConfig.ExtractGateways) ? overridingConfig.ExtractGateways.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ExtractGateways;
             this.ParametrizeApiOauth2Scope = !string.IsNullOrEmpty(overridingConfig.ParamApiOauth2Scope) ? overridingConfig.ParamApiOauth2Scope.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ParametrizeApiOauth2Scope;
             this.ExtractIdentityProviders = !string.IsNullOrEmpty(overridingConfig.ExtractIdentityProviders) ? overridingConfig.ExtractIdentityProviders.Equals("true", StringComparison.OrdinalIgnoreCase) : this.ExtractIdentityProviders;

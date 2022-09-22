@@ -55,6 +55,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configu
         [Option(longName: "generateVersionSetMasterTemplates", HelpText = "Creates a set of ARM templates to deploy all versions of an API")]
         public string GenerateVersionSetMasterTemplates { get; set; }
 
+        [Option(longName: "generateReleaseTemplates", HelpText = "Creates a set of ARM templates to deploy release objects for an API")]
+        public string GenerateReleaseTemplates { get; set; }
+
         [Option(longName: "linkedTemplatesBaseUrl", HelpText = "Creates a master template with links")]
         public string LinkedTemplatesBaseUrl { get; set; }
 

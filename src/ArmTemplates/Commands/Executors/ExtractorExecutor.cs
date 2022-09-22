@@ -1271,7 +1271,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 productApiTemplate = await this.GenerateProductApisTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
                 apiVersionSetTemplate = await this.GenerateApiVersionSetTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate.TypedResources.Apis);
                 apiTagTemplate = await this.GenerateTagApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
-                apiReleasesTemplate = await this.GenerateApiReleasesTemplateAsync(baseFilesGenerationDirectory);
+                if (this.extractorParameters.GenerateReleaseTemplates)
+                {
+                    apiReleasesTemplate = await this.GenerateApiReleasesTemplateAsync(baseFilesGenerationDirectory);
+                }
                 policyFragmentTemplate = await this.GeneratePolicyFragmentsTemplateAsync(apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
                 await this.GenerateGatewayApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
             }
