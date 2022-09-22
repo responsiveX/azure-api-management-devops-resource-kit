@@ -34,7 +34,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
 
         public const string ProductPolicyFileNameFormat = "{0}.xml";
         public const string ApiPolicyFileNameFormat = "{0}.xml";
-        public const string ApiOperationPolicyFileNameFormat = "{0}-{1}.xml";
+        public const string ApiOperationPolicyFileNameFormat =  "{0}-{1}.xml";
 
         readonly ILogger<PolicyExtractor> logger;
         readonly IPolicyClient policyClient;
@@ -134,7 +134,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
                 var policyFileName = string.Format(ApiOperationPolicyFileNameFormat, apiName, operationName);
                 await this.SavePolicyXmlAsync(apiOperationPolicy, policyDirectoryName, policyFileName);
 
-                this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, apiOperationPolicy, policyFileName);
+                this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, apiOperationPolicy, OperationPoliciesDirectoryName + "/" + policyFileName);
             }
 
             return apiOperationPolicy;
@@ -225,7 +225,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
                 var policyFileName = string.Format(ProductPolicyFileNameFormat, productTemplateResource.NewName);
                 await this.SavePolicyXmlAsync(productPolicy, policyDirectoryName, policyFileName);
 
-                this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, productPolicy, policyFileName);
+                this.SetPolicyTemplateResourcePolicyContentWithArmPresetValues(extractorParameters, productPolicy, ProductPoliciesDirectoryName + "/" + policyFileName);
             }
 
             return productPolicy;
@@ -291,11 +291,11 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             policyTemplate.Properties.Format = "rawxml-link";
             if (extractorParameters.PolicyXMLSasToken != null)
             {
-                policyTemplate.Properties.PolicyContent = $"[concat(parameters('{ParameterNames.PolicyXMLBaseUrl}'), '{policyFileName}', parameters('{ParameterNames.PolicyXMLSasToken}'))]";
+                policyTemplate.Properties.PolicyContent = $"[concat(parameters('{ParameterNames.PolicyXMLBaseUrl}'),'{policyFileName}', parameters('{ParameterNames.PolicyXMLSasToken}'))]";
             }
             else
             {
-                policyTemplate.Properties.PolicyContent = $"[concat(parameters('{ParameterNames.PolicyXMLBaseUrl}'), '{policyFileName}')]";
+                policyTemplate.Properties.PolicyContent = $"[concat(parameters('{ParameterNames.PolicyXMLBaseUrl}'),'{policyFileName}')]";
             }
         }
 
