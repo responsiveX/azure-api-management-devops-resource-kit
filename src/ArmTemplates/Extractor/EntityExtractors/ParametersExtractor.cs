@@ -183,20 +183,23 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
 
                 var namedValuesParameters = new Dictionary<string, string>();
                 var keyVaultNamedValues = new Dictionary<string, string>();
-                foreach (var namedValue in namedValuesResources.NamedValues)
+                if (namedValuesResources != null)
                 {
-                    if (extractorParameters.ParameterizeNamedValue && namedValue?.Properties.KeyVault == null)
+                    foreach (var namedValue in namedValuesResources.NamedValues)
                     {
-                        var propertyValue = namedValue.Properties.Value;
-                        var validPName = NamingHelper.GenerateValidParameterName(namedValue.OriginalName, ParameterPrefix.Property);
-                        namedValuesParameters.Add(validPName, propertyValue);
-                    }
+                        if (extractorParameters.ParameterizeNamedValue && namedValue?.Properties.KeyVault == null)
+                        {
+                            var propertyValue = namedValue.Properties.Value;
+                            var validPName = NamingHelper.GenerateValidParameterName(namedValue.OriginalName, ParameterPrefix.Property);
+                            namedValuesParameters.Add(validPName, propertyValue);
+                        }
 
-                    if (extractorParameters.ParamNamedValuesKeyVaultSecrets && namedValue?.Properties.KeyVault is not null)
-                    {
-                        var propertyValue = namedValue.Properties.KeyVault.SecretIdentifier;
-                        var validPName = NamingHelper.GenerateValidParameterName(namedValue.OriginalName, ParameterPrefix.Property);
-                        keyVaultNamedValues.Add(validPName, propertyValue);
+                        if (extractorParameters.ParamNamedValuesKeyVaultSecrets && namedValue?.Properties.KeyVault is not null)
+                        {
+                            var propertyValue = namedValue.Properties.KeyVault.SecretIdentifier;
+                            var validPName = NamingHelper.GenerateValidParameterName(namedValue.OriginalName, ParameterPrefix.Property);
+                            keyVaultNamedValues.Add(validPName, propertyValue);
+                        }
                     }
                 }
 
@@ -260,7 +263,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
                 parameters.Add(ParameterNames.ApiLoggerId, new TemplateObjectParameterProperties() { Value = loggersCache.CreateResultingMap() });
             }
 
-            if (extractorParameters.ParameterizeLogResourceId)
+            if (extractorParameters.ParameterizeLogResourceId && extractorParameters.GenerateLoggerTemplates)
             {
                 parameters.Add(ParameterNames.LoggerResourceId, new TemplateObjectParameterProperties() { Value = loggerTemplateResources.LoggerResourceIds });
             }

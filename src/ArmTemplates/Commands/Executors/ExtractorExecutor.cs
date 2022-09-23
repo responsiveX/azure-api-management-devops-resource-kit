@@ -1285,9 +1285,15 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 productTemplate = await this.GenerateProductsTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate?.TypedResources?.ApiProducts);
                 authorizationServerTemplate = await this.GenerateAuthorizationServerTemplateAsync(singleApiName, baseFilesGenerationDirectory, apiTemplate?.TypedResources?.Apis);
                 tagTemplate = await this.GenerateTagTemplateAsync(singleApiName, apiTemplate?.TypedResources, productTemplate.TypedResources, baseFilesGenerationDirectory);
-                loggerTemplate = await this.GenerateLoggerTemplateAsync(apisToExtract, apiTemplate?.TypedResources?.GetAllPolicies(), baseFilesGenerationDirectory);
-                namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), loggerTemplate.TypedResources.Loggers, baseFilesGenerationDirectory);
-                backendTemplate = await this.GenerateBackendTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), namedValueTemplate.TypedResources.NamedValues, baseFilesGenerationDirectory);
+                if (this.extractorParameters.GenerateLoggerTemplates)
+                {
+                    loggerTemplate = await this.GenerateLoggerTemplateAsync(apisToExtract, apiTemplate?.TypedResources?.GetAllPolicies(), baseFilesGenerationDirectory);
+                }
+                if (this.extractorParameters.GenerateNamedValueTemplates)
+                {
+                    namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), loggerTemplate.TypedResources.Loggers, baseFilesGenerationDirectory);
+                }
+                backendTemplate = await this.GenerateBackendTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), namedValueTemplate?.TypedResources?.NamedValues, baseFilesGenerationDirectory);
                 groupTemplate = await this.GenerateGroupsTemplateAsync(baseFilesGenerationDirectory);
                 identityProviderTemplate = await this.GenerateIdentityProviderTemplateAsync(baseFilesGenerationDirectory);
                 openIdConnectProviderTemplate = await this.GenerateOpenIdConnectProviderTemplateAsync(baseFilesGenerationDirectory);
@@ -1301,7 +1307,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
 
             if (this.extractorParameters.GenerateParameterFiles)
             {
-                var parametersTemplate = await this.GenerateParametersTemplateAsync(apisToExtract, loggerTemplate.TypedResources, backendTemplate.TypedResources, namedValueTemplate.TypedResources, identityProviderTemplate.TypedResources, openIdConnectProviderTemplate.TypedResources, baseFilesGenerationDirectory);
+                var parametersTemplate = await this.GenerateParametersTemplateAsync(apisToExtract, loggerTemplate?.TypedResources, backendTemplate.TypedResources, namedValueTemplate?.TypedResources, identityProviderTemplate.TypedResources, openIdConnectProviderTemplate.TypedResources, baseFilesGenerationDirectory);
 
                 await this.GenerateResourceParametersFiles(
                     baseFilesGenerationDirectory,

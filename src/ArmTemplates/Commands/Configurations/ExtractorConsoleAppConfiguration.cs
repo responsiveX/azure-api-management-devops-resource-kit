@@ -58,6 +58,12 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configu
         [Option(longName: "generateReleaseTemplates", HelpText = "Creates a set of ARM templates to deploy release objects for an API")]
         public string GenerateReleaseTemplates { get; set; }
 
+        [Option(longName: "generateLoggerTemplates", HelpText = "Creates a set of ARM templates to deploy logger objects")]
+        public string GenerateLoggerTemplates { get; set; }
+
+        [Option(longName: "generateNamedValueTemplates", HelpText = "Creates a set of ARM templates to deploy named value objects")]
+        public string GenerateNamedValueTemplates { get; set; }
+
         [Option(longName: "linkedTemplatesBaseUrl", HelpText = "Creates a master template with links")]
         public string LinkedTemplatesBaseUrl { get; set; }
 

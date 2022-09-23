@@ -165,6 +165,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             string backendName,
             BackendTemplateResource backendTemplateResource)
         {
+            namedValueResources ??= new List<NamedValueTemplateResource>();
+
             // a policy is referenced by a backend with the set-backend-service policy, which will reference use the backends name or url, or through referencing a named value that applies to the backend
             var namedValueResourcesUsedByBackend = namedValueResources.Where(resource => this.DoesBackendReferenceNamedValue(resource, backendTemplateResource));
             
