@@ -3,11 +3,12 @@
   "destinationApimName": "apim-carquotes-dev",
   "resourceGroup": "rg-carquotes-dev",
   "fileFolder": "D:/Dev/CarQuotes/lead-service/deploy/api-management",
-  "includeAllRevisions": false,
+  "includeAllRevisions": true,
   "splitAPIs": false,
+  "apiName": "lead",
   "generateParameterFiles": false,
-  "generateGlobalTemplates": true,
-  "generateApiTemplates": false,
+  "generateGlobalTemplates": false,
+  "generateApiTemplates": true,
   "generateEmptyPolicyFiles": true,
   "generateApiManagementServiceTemplate": false,
   "generateRevisionMasterTemplates": false,
@@ -22,5 +23,7 @@
   "excludeBuildInGroups": true,
   "policyXMLBaseUrl": "https://stcarquotesdeploy.blob.core.windows.net/test/policies/",
   "linkedTemplatesBaseUrl": "https://stcarquotesdeploy.blob.core.windows.net/test/",
-  "baseFileName": "carquotes"
+  "baseFileName": "carquotes",
+  "linkedTemplatesSasToken": "true",
+  "policyXMLSasToken": "true"
 }
