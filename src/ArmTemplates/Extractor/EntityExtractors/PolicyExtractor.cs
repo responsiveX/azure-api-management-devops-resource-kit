@@ -160,7 +160,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
                             Format = "xml",
                             PolicyContent = GetEmptyPolicyFileContents()
                         },
-                        Type = "Microsoft.ApiManagement/service/apis/policies"
+                        Type = "Microsoft.ApiManagement/service/apis/policies",
+                        Name = "policy"
                     };
                 }
             }
