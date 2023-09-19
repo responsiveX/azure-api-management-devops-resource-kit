@@ -76,7 +76,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
 
                     await this.AddProductPolicyToTemplateResources(extractorParameters, productTemplateResource, productsTemplate.TypedResources, baseFilesGenerationDirectory);
                     await this.AddProductTagsToTemplateResources(extractorParameters, productTemplateResource, productsTemplate.TypedResources);
-                    await this.AddGroupsLinkedToProductResources(extractorParameters, productTemplateResource, productsTemplate.TypedResources);
+                    if (extractorParameters.GenerateProductGroupTemplates)
+                    {
+                        await this.AddGroupsLinkedToProductResources(extractorParameters, productTemplateResource, productsTemplate.TypedResources);
+                    }
                 }
             }
 

@@ -40,6 +40,9 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Configu
         [Option(longName: "generateGlobalTemplates", HelpText = "Creates ARM template files for global resources and settings")]
         public string GenerateGlobalTemplates { get; set; }
 
+        [Option(longName: "generateProductGroupTemplates", HelpText = "Adds product group templates into the products template file")]
+        public string GenerateProductGroupTemplates { get; set; }
+
         [Option(longName: "generateApiTemplates", HelpText = "Creates ARM template files for API specific resources and settings")]
         public string GenerateApiTemplates { get; set; }
 

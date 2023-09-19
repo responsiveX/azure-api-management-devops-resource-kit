@@ -55,6 +55,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
 
         public bool GenerateGlobalTemplates { get; private set; }
 
+        public bool GenerateProductGroupTemplates { get; private set; }
+
         public bool GenerateApiTemplates { get; private set; }
 
         public bool GenerateEmptyPolicyFiles { get; private set; }
@@ -126,6 +128,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.SingleApiName = extractorConfig.ApiName;
             this.GenerateParameterFiles = string.IsNullOrEmpty(extractorConfig.GenerateParameterFiles) || extractorConfig.GenerateParameterFiles.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.GenerateGlobalTemplates = string.IsNullOrEmpty(extractorConfig.GenerateGlobalTemplates) || extractorConfig.GenerateGlobalTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
+            this.GenerateProductGroupTemplates = string.IsNullOrEmpty(extractorConfig.GenerateProductGroupTemplates) || extractorConfig.GenerateProductGroupTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.GenerateApiTemplates = string.IsNullOrEmpty(extractorConfig.GenerateApiTemplates) || extractorConfig.GenerateApiTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.GenerateEmptyPolicyFiles = string.IsNullOrEmpty(extractorConfig.GenerateEmptyPolicyFiles) || extractorConfig.GenerateEmptyPolicyFiles.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.GenerateApiManagementServiceTemplate = string.IsNullOrEmpty(extractorConfig.GenerateApiManagementServiceTemplate) || extractorConfig.GenerateApiManagementServiceTemplate.Equals("true", StringComparison.OrdinalIgnoreCase);
