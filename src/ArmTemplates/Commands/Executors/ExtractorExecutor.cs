@@ -1294,7 +1294,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                     namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), loggerTemplate.TypedResources.Loggers, baseFilesGenerationDirectory);
                 }
                 backendTemplate = await this.GenerateBackendTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), namedValueTemplate?.TypedResources?.NamedValues, baseFilesGenerationDirectory);
-                groupTemplate = await this.GenerateGroupsTemplateAsync(baseFilesGenerationDirectory);
+                if (this.extractorParameters.GenerateProductGroupTemplates)
+                {
+                    groupTemplate = await this.GenerateGroupsTemplateAsync(baseFilesGenerationDirectory);
+                }
                 identityProviderTemplate = await this.GenerateIdentityProviderTemplateAsync(baseFilesGenerationDirectory);
                 openIdConnectProviderTemplate = await this.GenerateOpenIdConnectProviderTemplateAsync(baseFilesGenerationDirectory);
                 schemasTempate = await this.GenerateSchemasTemplateAsync(baseFilesGenerationDirectory);
