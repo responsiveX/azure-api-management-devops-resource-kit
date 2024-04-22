@@ -455,6 +455,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Template
 
     public class LinkedMasterTemplateAPIInformation
     {
+#pragma warning disable IDE1006
         public string name { get; set; }
         public bool isSplit { get; set; }
         public bool dependsOnGlobalServicePolicies { get; set; }
@@ -466,6 +467,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Template
         public bool dependsOnTags { get; set; }
         public bool isServiceUrlParameterize { get; set; }
         public string dependsOnVersion { get; set; }
+#pragma warning restore IDE1006
     }
 
 }
