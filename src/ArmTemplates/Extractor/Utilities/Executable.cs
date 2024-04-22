@@ -36,13 +36,13 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Utilit
         {
             var processInfo = new ProcessStartInfo
             {
-                FileName = exeName,
-                Arguments = arguments,
+                FileName = this.exeName,
+                Arguments = this.arguments,
                 CreateNoWindow = !this.visibleProcess,
-                UseShellExecute = shareConsole,
-                RedirectStandardError = streamOutput,
-                RedirectStandardInput = streamOutput,
-                RedirectStandardOutput = streamOutput,
+                UseShellExecute = this.shareConsole,
+                RedirectStandardError = this.streamOutput,
+                RedirectStandardInput = this.streamOutput,
+                RedirectStandardOutput = this.streamOutput,
                 WorkingDirectory = this.workingDirectory ?? Environment.CurrentDirectory
             };
 
@@ -56,7 +56,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Utilit
                 {
                     throw new FileNotFoundException(ex.Message, ex);
                 }
-                throw ex;
+                throw;
             }
 
             if (this.streamOutput)
