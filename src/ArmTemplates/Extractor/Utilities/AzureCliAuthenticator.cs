@@ -45,12 +45,12 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Utilit
 
         async Task<(bool succeeded, string token)> TryGetAzCliToken()
         {
-            return await ExecuteCommand(GlobalConstants.azAccessToken);
+            return await ExecuteCommand(GlobalConstants.AzureAccessToken);
         }
 
         async Task<(bool succeeded, string token)> TryGetAzSubscriptionId()
         {
-            return await ExecuteCommand(GlobalConstants.azSubscriptionId);
+            return await ExecuteCommand(GlobalConstants.AzureSubscriptionId);
         }
 
         static async Task<(bool succeeded, string token)> ExecuteCommand(string commandParameters)
