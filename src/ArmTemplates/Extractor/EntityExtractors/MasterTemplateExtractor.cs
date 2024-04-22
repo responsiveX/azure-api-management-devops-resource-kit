@@ -530,7 +530,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
         string GenerateLinkedTemplateUri(string fileName, ExtractorParameters extractorParameters)
         {
             var linkedTemplateUri = !string.IsNullOrEmpty(extractorParameters.LinkedTemplatesSasToken)
-                ? $"parameters('{ParameterNames.LinkedTemplatesBaseUrl}'), '{fileName}', parameters('{ParameterNames.LinkedTemplatesSasToken}')"
+                ? $"parameters('{ParameterNames.LinkedTemplatesBaseUrl}'), '{fileName}', '?', replace(parameters('{ParameterNames.LinkedTemplatesSasToken}'),'?','')"
                 : $"parameters('{ParameterNames.LinkedTemplatesBaseUrl}'), '{fileName}'";
 
             return !string.IsNullOrEmpty(extractorParameters.LinkedTemplatesUrlQueryString)

@@ -138,10 +138,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.GenerateLoggerTemplates = string.IsNullOrEmpty(extractorConfig.GenerateLoggerTemplates) || extractorConfig.GenerateLoggerTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.GenerateNamedValueTemplates = string.IsNullOrEmpty(extractorConfig.GenerateNamedValueTemplates) || extractorConfig.GenerateNamedValueTemplates.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.LinkedTemplatesBaseUrl = extractorConfig.LinkedTemplatesBaseUrl;
-            this.LinkedTemplatesSasToken = extractorConfig.LinkedTemplatesSasToken;
+            this.LinkedTemplatesSasToken = RemoveLeadingQuestionMark(extractorConfig.LinkedTemplatesSasToken);
             this.LinkedTemplatesUrlQueryString = extractorConfig.LinkedTemplatesUrlQueryString;
             this.PolicyXMLBaseUrl = extractorConfig.PolicyXMLBaseUrl;
-            this.PolicyXMLSasToken = extractorConfig.PolicyXMLSasToken;
+            this.PolicyXMLSasToken = RemoveLeadingQuestionMark(extractorConfig.PolicyXMLSasToken);
             this.ApiVersionSetName = extractorConfig.ApiVersionSetName;
             this.ParameterizeNamedValue = extractorConfig.ParamNamedValue != null && extractorConfig.ParamNamedValue.Equals("true", StringComparison.OrdinalIgnoreCase);
             this.ParameterizeApiLoggerId = extractorConfig.ParamApiLoggerId != null && extractorConfig.ParamApiLoggerId.Equals("true", StringComparison.OrdinalIgnoreCase);
@@ -192,10 +192,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             this.FilesGenerationRootDirectory = overridingConfig.FileFolder ?? this.FilesGenerationRootDirectory;
             this.SingleApiName = overridingConfig.ApiName ?? this.SingleApiName;
             this.LinkedTemplatesBaseUrl = overridingConfig.LinkedTemplatesBaseUrl ?? this.LinkedTemplatesBaseUrl;
-            this.LinkedTemplatesSasToken = overridingConfig.LinkedTemplatesSasToken ?? this.LinkedTemplatesSasToken;
+            this.LinkedTemplatesSasToken = RemoveLeadingQuestionMark(overridingConfig.LinkedTemplatesSasToken) ?? this.LinkedTemplatesSasToken;
             this.LinkedTemplatesUrlQueryString = overridingConfig.LinkedTemplatesUrlQueryString ?? this.LinkedTemplatesUrlQueryString;
             this.PolicyXMLBaseUrl = overridingConfig.PolicyXMLBaseUrl ?? this.PolicyXMLBaseUrl;
-            this.PolicyXMLSasToken = overridingConfig.PolicyXMLSasToken ?? this.PolicyXMLSasToken;
+            this.PolicyXMLSasToken = RemoveLeadingQuestionMark(overridingConfig.PolicyXMLSasToken) ?? this.PolicyXMLSasToken;
             this.ApiVersionSetName = overridingConfig.ApiVersionSetName ?? this.ApiVersionSetName;
             this.OperationBatchSize = overridingConfig.OperationBatchSize ?? this.OperationBatchSize;
 
@@ -306,6 +306,12 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Models
             {
                 throw new NotSupportedException("When \"generateApiTemplates\" is false, you cannot specify any of the api options (apiName, multipleAPIs, apiVersionSetName, splitAPIs)");
             }
+        }
+
+        static string RemoveLeadingQuestionMark(string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.StartsWith("?") ? value.Substring(1) : value;
         }
     }
 }
