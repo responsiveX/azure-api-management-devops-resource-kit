@@ -246,7 +246,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             {
                 // This condition is hit when generating just the global ARM template files
                 this.logger.LogInformation("No specific parameters are set for template generation...");
-                await this.GenerateTemplates(this.extractorParameters.FilesGenerationRootDirectory, singleApiName: this.extractorParameters.SingleApiName);
+                await this.GenerateTemplates(this.extractorParameters.FilesGenerationRootDirectory, singleApiName: this.extractorParameters?.SingleApiName);
             }
         }
 
@@ -1291,7 +1291,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 }
                 if (this.extractorParameters.GenerateNamedValueTemplates)
                 {
-                    namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), loggerTemplate.TypedResources.Loggers, baseFilesGenerationDirectory);
+                    namedValueTemplate = await this.GenerateNamedValuesTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), loggerTemplate?.TypedResources?.Loggers, baseFilesGenerationDirectory);
                 }
                 backendTemplate = await this.GenerateBackendTemplateAsync(singleApiName, apiTemplate?.TypedResources?.GetAllPolicies(), namedValueTemplate?.TypedResources?.NamedValues, baseFilesGenerationDirectory);
                 if (this.extractorParameters.GenerateProductGroupTemplates)
