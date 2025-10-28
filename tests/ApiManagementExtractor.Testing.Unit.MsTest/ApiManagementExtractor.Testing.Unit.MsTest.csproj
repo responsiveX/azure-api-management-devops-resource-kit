@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ArmTemplates\ArmTemplates.csproj" />
+    <ProjectReference Include="..\..\src\ApiManagementExtractor\ApiManagementExtractor.csproj" />
   </ItemGroup>
 
   <!-- copy resources for tests -->
