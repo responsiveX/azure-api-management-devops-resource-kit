@@ -1,11 +1,13 @@
 [CmdletBinding()]
 param (
-    [string]$settingsFilePath = 'extractorSettings.json',
-    [string]$extractorBinaryPath = '../../../azure-api-management-devops-resource-kit/ArmTemplates.exe')
+    [string]$settingsFilePath = 'extractorSettings.template.json',
+    [string]$extractorBinaryPath = '../../tools/azure-api-management-devops-resource-kit/ArmTemplates.exe',
+    [string[]] $apis = @('device-meter-api-v10', 'game-play-api-v10', 'metrics-api-v10', 'game-api-v10')
+)
 
-$absScriptDirectoryPath = [System.IO.Path]::GetDirectoryName($MyInvocation.MyCommand.Path)
-$absSettingsFilePath = [System.IO.Path]::GetFullPath($settingsFilePath)
-$absExtractorBinaryPath = [System.IO.Path]::GetFullPath($extractorBinaryPath)
+$absScriptDirectoryPath = $PSScriptRoot
+$absSettingsFilePath = Convert-Path -LiteralPath (Join-Path -Path $absScriptDirectoryPath -ChildPath $settingsFilePath)
+$absExtractorBinaryPath = Convert-Path -LiteralPath (Join-Path -Path $absScriptDirectoryPath -ChildPath $extractorBinaryPath)
 
 Write-Host
 Write-Host "Note:"
@@ -23,4 +25,19 @@ Write-Host "Launching Extractor..."
 Write-Host "======================"
 Write-Host
 
-& $absExtractorBinaryPath extract --extractorConfig $absSettingsFilePath
+$template = Get-Content $settingsFilePath
+
+foreach($api in $apis){ 
+    $tempFile = New-TemporaryFile
+    try {
+        $template -replace '{{apiName}}', $api | Set-Content $tempFile
+        & $absExtractorBinaryPath extract --extractorConfig $tempFile
+    }
+    catch{
+        Write-Error "Failed to extract $api"
+    }
+    finally{
+        Remove-Item $tempFile
+    }
+    
+}

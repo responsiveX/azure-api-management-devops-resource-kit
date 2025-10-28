@@ -1,4 +1,4 @@
-The extractorHelper.ps1 and ExtractApiManagement.bat files are designed to be placed in the same directory with each extractorSettings.json file.
+The extractorHelper.ps1 and ExtractApiManagement.bat files are designed to be placed in the same directory with the extractorSettings.template.json file.
 
 The extractorHelper.ps1 file works out the correct paths and launches the extractor executable (ArmTemplates.exe) with the necessary parameters.
 The default PowerShell parameter value $extractorBinaryPath should be adjusted for your environment to point to wherever the ArmTemplates.exe
