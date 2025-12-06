@@ -26,7 +26,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
 {
     public class PolicyExtractor : IPolicyExtractor
     {
-        public const string EmptyPolicyFileResourcePath = "Microsoft.Azure.Management.ApiManagement.ArmTemplates.Resources.EmptyPolicyFile.xml";
+        public const string EmptyPolicyFileResourcePath = "ApiManagementExtractor.ApiManagementExtractor.Resources.EmptyPolicyFile.xml";
         public const string PoliciesDirectoryName = "policies";
         public const string OperationPoliciesDirectoryName = "operations";
         public const string ProductPoliciesDirectoryName = "products";
@@ -34,7 +34,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
 
         public const string ProductPolicyFileNameFormat = "{0}.xml";
         public const string ApiPolicyFileNameFormat = "{0}.xml";
-        public const string ApiOperationPolicyFileNameFormat =  "{0}-{1}.xml";
+        public const string ApiOperationPolicyFileNameFormat = "{0}-{1}.xml";
 
         readonly ILogger<PolicyExtractor> logger;
         readonly IPolicyClient policyClient;
@@ -141,7 +141,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
         }
 
         public async Task<PolicyTemplateResource> GenerateApiPolicyResourceAsync(
-            string apiName, 
+            string apiName,
             string baseFilesGenerationDirectory,
             ExtractorParameters extractorParameters)
         {
@@ -217,7 +217,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
             productPolicy.ApiVersion = GlobalConstants.ApiVersion;
             productPolicy.Scale = null;
             productPolicy.DependsOn = productResourceId;
-            
+
             // due to legacy reasons, providing empty `policyXmlBaseUrl = ""` is recognized as a boolean parameter 
             // telling that it is needed to provide a policy Xml file
             if (extractorParameters.PolicyXMLBaseUrl is not null)
@@ -274,7 +274,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Extractor.Entity
         }
 
         static string GetEmptyPolicyFileContents()
-        {   var assembly = Assembly.GetExecutingAssembly();
+        {
+            var assembly = Assembly.GetExecutingAssembly();
             using (Stream stream = assembly.GetManifestResourceStream(EmptyPolicyFileResourcePath))
             {
                 using (StreamReader reader = new StreamReader(stream))
