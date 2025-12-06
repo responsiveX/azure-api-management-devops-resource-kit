@@ -76,7 +76,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
         readonly IOpenIdConnectProviderExtractor openIdConnectProviderExtractor;
         readonly IPolicyFragmentsExtractor policyFragmentsExtractor;
         readonly IApiReleaseExtractor apiReleaseExtractor;
- 
+
         public ExtractorExecutor(
             ILogger<ExtractorExecutor> logger,
             IDirectoryNameGeneratorFactory directoryNameGeneratorFactory,
@@ -504,7 +504,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
             this.RenameExistingParametersDirectory(baseFilesGenerationDirectory);
 
             await this.GenerateResourceParametersFile(baseFilesGenerationDirectory, apiTemplate?.TypedResources.ParametersFileName, apiTemplate, mainParametersTemplate);
-            await this.GenerateResourceParametersFile(baseFilesGenerationDirectory, this.extractorParameters.FileNames.GlobalServicePolicyParameters , policyTemplate, mainParametersTemplate);
+            await this.GenerateResourceParametersFile(baseFilesGenerationDirectory, this.extractorParameters.FileNames.GlobalServicePolicyParameters, policyTemplate, mainParametersTemplate);
             await this.GenerateResourceParametersFile(baseFilesGenerationDirectory, this.extractorParameters.FileNames.ApiVersionSetsParameters, apiVersionSetTemplate, mainParametersTemplate);
             await this.GenerateResourceParametersFile(baseFilesGenerationDirectory, this.extractorParameters.FileNames.ProductsParameters, productsTemplate, mainParametersTemplate);
             await this.GenerateResourceParametersFile(baseFilesGenerationDirectory, this.extractorParameters.FileNames.ProductAPIsParameters, productApisTemplate, mainParametersTemplate);
@@ -603,7 +603,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                     this.extractorParameters, apiTemplateResources, null, apiVersionSetTemplateResources,
                     null, productApisTemplateResources, apiTagsTemplateResources, null,
                     null, null, null, null,
-                    null, null, null, null, policyFragmentsResources);
+                    null, null, null, null, null);
             }
             else if (this.extractorParameters.GenerateGlobalTemplates)
             {
@@ -611,7 +611,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                     this.extractorParameters, null, policyTemplateResources, null,
                     productsTemplateResources, null, null, loggersTemplateResources,
                     backendsTemplateResources, authorizationServersTemplateResources, namedValuesTemplateResources, tagTemplateResources,
-                    groupTemplateResources, identityProviderTemplateResources, schemaTemplateResources, openIdConnectProviderResources, null);
+                    groupTemplateResources, identityProviderTemplateResources, schemaTemplateResources, openIdConnectProviderResources, policyFragmentsResources);
             }
 
 
@@ -923,7 +923,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                     directory: baseFilesGenerationDirectory,
                     fileName: this.extractorParameters.FileNames.ApiManagementService);
             }
-            
+
             this.logger.LogInformation("Finished generation of identity providers template...");
             return apiManagementServiceTemplate;
         }
@@ -1091,7 +1091,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 {
                     // generate seperate folder for each API
                     string apiFileFolder = directoryNameGenerator.GetApiVersionAndRevisionFolder(apiRootFolder, apiName);
-                    
+
                     Directory.CreateDirectory(apiFileFolder);
                     await this.GenerateTemplates(apiFileFolder, singleApiName: apiName);
                 }
@@ -1199,7 +1199,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 revList.Add(apiRevisionName);
 
                 await this.GenerateTemplates(revFileFolder, singleApiName: apiRevisionName);
-                
+
                 if (generateSingleApiReleaseTemplate)
                 {
                     await this.GenerateApiReleaseTemplateAsync(apiRevisionName, revFileFolder);
@@ -1275,7 +1275,6 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 {
                     apiReleasesTemplate = await this.GenerateApiReleasesTemplateAsync(baseFilesGenerationDirectory);
                 }
-                policyFragmentTemplate = await this.GeneratePolicyFragmentsTemplateAsync(apiTemplate.TypedResources.GetAllPolicies(), baseFilesGenerationDirectory);
                 await this.GenerateGatewayApiTemplateAsync(singleApiName, multipleApiNames, baseFilesGenerationDirectory);
             }
 
@@ -1301,6 +1300,8 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
                 identityProviderTemplate = await this.GenerateIdentityProviderTemplateAsync(baseFilesGenerationDirectory);
                 openIdConnectProviderTemplate = await this.GenerateOpenIdConnectProviderTemplateAsync(baseFilesGenerationDirectory);
                 schemasTempate = await this.GenerateSchemasTemplateAsync(baseFilesGenerationDirectory);
+                var globalPolicies = new List<PolicyTemplateResource>() { globalServicePolicyTemplate.TypedResources.GlobalServicePolicy };
+                policyFragmentTemplate = await this.GeneratePolicyFragmentsTemplateAsync(globalPolicies, baseFilesGenerationDirectory);
                 await this.GenerateGatewayTemplateAsync(singleApiName, baseFilesGenerationDirectory);
                 if (this.extractorParameters.GenerateApiManagementServiceTemplate)
                 {
@@ -1395,11 +1396,11 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Commands.Executo
 
             // Generate folders based on all apiversionset
             var apiDictionary = new Dictionary<string, List<string>>();
-            
+
             foreach (var api in apis)
             {
                 string apiDisplayName = api.Properties.DisplayName;
-                
+
                 if (!apiDictionary.ContainsKey(apiDisplayName))
                 {
                     var apiVersionSet = new List<string>();
