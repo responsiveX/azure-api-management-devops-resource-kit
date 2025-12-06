@@ -1,7 +1,7 @@
 [CmdletBinding()]
 param (
     [string]$settingsFilePath = 'extractorSettings.template.json',
-    [string]$extractorBinaryPath = '../../tools/azure-api-management-devops-resource-kit/ApiManagementExtractor.exe',
+    [string]$extractorBinaryPath = '../../tools/ApiManagementExtractor/ApiManagementExtractor.exe',
     [string[]] $apis = @('device-meter-api-v10', 'game-play-api-v10', 'metrics-api-v10', 'game-api-v10')
 )
 
