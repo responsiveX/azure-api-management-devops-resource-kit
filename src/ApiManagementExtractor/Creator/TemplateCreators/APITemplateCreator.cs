@@ -3,22 +3,22 @@
 //  Licensed under the MIT License.
 // --------------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using System;
-using System.Net;
+using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.TemplateModels;
+using System.Net.Http;
+using System.Threading.Tasks;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Constants;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Abstractions;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Policy;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.FileHandlers;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Utilities;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.ProductApis;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.TemplateModels;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Abstractions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Builders.Abstractions;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Policy;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.ProductApis;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.TagApi;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Models.Parameters;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.TemplateCreators.Abstractions;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Utilities;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.TemplateCreators
 {
@@ -242,8 +242,10 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Template
 
                     if (isUrl)
                     {
-                        using (var client = new WebClient())
-                            value = client.DownloadString(value);
+                        using (var httpClient = new HttpClient())
+                        {
+                            value = await httpClient.GetStringAsync(value);
+                        }
                     }
 
                     // update title
