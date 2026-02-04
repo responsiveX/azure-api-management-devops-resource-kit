@@ -3,9 +3,10 @@
 //  Licensed under the MIT License.
 // --------------------------------------------------------------------------
 
-using Xunit;
 using System.IO;
+using System.Threading.Tasks;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.FileHandlers;
+using Xunit;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Common.FileHandlerTests
 {
@@ -20,7 +21,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Common.Fil
                "OpenAPISpecs", Path.DirectorySeparatorChar);
         }
         [Fact]
-        public async void ShouldDetermineCorrectOpenAPISpecVersion()
+        public async ValueTask ShouldDetermineCorrectOpenAPISpecVersion()
         {
             // arrangeW
             OpenAPISpecReader openAPISpecReader = new OpenAPISpecReader();
