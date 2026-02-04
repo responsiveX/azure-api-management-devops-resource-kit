@@ -3,22 +3,23 @@
 //  Licensed under the MIT License.
 // --------------------------------------------------------------------------
 
-using Xunit;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.TemplateCreatorFactories;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Abstractions;
-using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.TemplateCreators;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Constants;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.Templates.Abstractions;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Models.Parameters;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.TemplateCreators;
+using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.TemplateCreatorFactories;
+using Xunit;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.TemplateCreatorTests
 {
     public class APITemplateCreatorTests
     {
         [Fact]
-        public async void ShouldCreateInitialAPITemplateResourceFromCreatorConfig()
+        public async ValueTask ShouldCreateInitialAPITemplateResourceFromCreatorConfig()
         {
             // arrange
             var apiTemplateCreator = APITemplateCreatorFactory.GenerateAPITemplateCreator();
@@ -81,7 +82,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.Te
         }
 
         [Fact]
-        public async void ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithCorrectContent()
+        public async ValueTask ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithCorrectContent()
         {
             // arrange
             var apiTemplateCreator = APITemplateCreatorFactory.GenerateAPITemplateCreator();
@@ -103,7 +104,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.Te
         }
 
         [Fact]
-        public async void ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithAlternateTitle()
+        public async ValueTask ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithAlternateTitle()
         {
             // arrange
             var apiTemplateCreator = APITemplateCreatorFactory.GenerateAPITemplateCreator();
@@ -134,7 +135,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.Te
         }
 
         [Fact]
-        public async void ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithAlternateTitleInSwagger()
+        public async ValueTask ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithAlternateTitleInSwagger()
         {
             // arrange
             var apiTemplateCreator = APITemplateCreatorFactory.GenerateAPITemplateCreator();
@@ -175,7 +176,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.Te
         }
 
         [Fact]
-        public async void ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithAlternateTitleInOpenApi()
+        public async ValueTask ShouldCreateSubsequentlAPITemplateResourceFromCreatorConfigWithAlternateTitleInOpenApi()
         {
             // arrange
             var apiTemplateCreator = APITemplateCreatorFactory.GenerateAPITemplateCreator();
@@ -216,7 +217,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.Te
         }
 
         [Fact]
-        public async void ShouldCreateUnifiedAPITemplateResourceFromCreatorConfig()
+        public async ValueTask ShouldCreateUnifiedAPITemplateResourceFromCreatorConfig()
         {
             // arrange
             var apiTemplateCreator = APITemplateCreatorFactory.GenerateAPITemplateCreator();
@@ -279,7 +280,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Creator.Te
         }
 
         [Fact]
-        public async void ShouldAppendRevisionToAPIName()
+        public async ValueTask ShouldAppendRevisionToAPIName()
         {
             // arrange
             var apiTemplateCreator = APITemplateCreatorFactory.GenerateAPITemplateCreator();

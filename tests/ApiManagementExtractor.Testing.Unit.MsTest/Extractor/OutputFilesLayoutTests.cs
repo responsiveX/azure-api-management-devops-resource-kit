@@ -53,7 +53,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Extractor
             var outputGlobalServicePolicyFilePath = Path.Combine(currentTestDirectory, extractorParameters.FileNames.GlobalServicePolicy);
             File.Exists(outputGlobalServicePolicyFilePath).Should().BeTrue();
 
-            var policyTemplateText = await File.ReadAllTextAsync(outputGlobalServicePolicyFilePath);
+            var policyTemplateText = await File.ReadAllTextAsync(outputGlobalServicePolicyFilePath, TestContext.Current.CancellationToken);
             var policyTemplateJson = JToken.Parse(policyTemplateText);
             
             var resourcesSection = policyTemplateJson["resources"].First;

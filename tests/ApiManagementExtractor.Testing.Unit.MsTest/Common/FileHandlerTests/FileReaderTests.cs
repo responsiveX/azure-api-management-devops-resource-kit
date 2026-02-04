@@ -8,13 +8,14 @@ using System;
 using System.IO;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Common.FileHandlers;
 using Microsoft.Azure.Management.ApiManagement.ArmTemplates.Creator.Models.Parameters;
+using System.Threading.Tasks;
 
 namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Common.FileHandlerTests
 {
     public class FileReaderTests
     {
         [Fact]
-        public async void ShouldConvertYAMLConfigToCreatorConfiguration()
+        public async ValueTask ShouldConvertYAMLConfigToCreatorConfiguration()
         {
             // arrange
             FileReader fileReader = new FileReader();
@@ -31,7 +32,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates.Tests.Common.Fil
         }
 
         [Fact]
-        public async void ShouldRetrieveFileContentsWithoutError()
+        public async ValueTask ShouldRetrieveFileContentsWithoutError()
         {
             // arrange
             FileReader fileReader = new FileReader();

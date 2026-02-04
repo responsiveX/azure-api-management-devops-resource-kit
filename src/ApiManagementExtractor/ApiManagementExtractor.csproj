@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>net10.0</TargetFramework>
         <ProjectGuid>{B5183465-2BC1-4206-9C9F-5AC9615AC941}</ProjectGuid>
         <LangVersion>latest</LangVersion>
         <PackAsTool>true</PackAsTool>
@@ -35,14 +35,13 @@
 
     <ItemGroup>
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
-        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.20.1" />
-        <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="5.0.1" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-        <PackageReference Include="YamlDotNet" Version="15.1.2" />
+        <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="10.0.2" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.2" />
+        <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="10.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+        <PackageReference Include="YamlDotNet" Version="16.3.0" />
     </ItemGroup>
 
     <ItemGroup>
