@@ -25,7 +25,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates
             var applicationLogger = SetupApplicationLoggingToConsole();
             var serviceProvider = CreateServiceProvider(applicationLogger);
 
-            applicationLogger.Information("Booting up Azure-Api-Management-DevOps-Resource-Kit v{0} running .NET {1}", Application.BuildVersion, RuntimeInformation.FrameworkDescription);
+            applicationLogger.Information("Booting up API Management Extractor v{0} running .NET {1}", Application.BuildVersion, RuntimeInformation.FrameworkDescription);
 
             var commandLineParser = new Parser(parserSettings =>
             {

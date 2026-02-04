@@ -9,7 +9,7 @@ namespace Microsoft.Azure.Management.ApiManagement.ArmTemplates
 {
     class Application
     {
-        public const string Name = "azure-api-management-devops-resource-kit";
+        public const string Name = "API Management Extractor";
 
         public static readonly string BuildVersion = Assembly.GetEntryAssembly().GetName().Version.ToString();
     }
