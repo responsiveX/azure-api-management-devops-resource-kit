@@ -1,0 +1,15 @@
+{
+    "profiles": {
+        "ExtractGlobalSettings": {
+            "commandName": "Project",
+            "commandLineArgs": "extract --extractorConfig ../../../extractorSettingsGlobal.json"
+        },
+        "ExtractApis": {
+            "commandName": "Project",
+            "commandLineArgs": "extract --extractorConfig ../../../extractorSettingsApi.json"
+        },
+        "Docker": {
+            "commandName": "Docker"
+        }
+    }
+}
